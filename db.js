@@ -1,6 +1,9 @@
+import each from 'async/each';
+
+const MongoClient = require('mongodb').MongoClient;
+const fixtures = require(`${process.cwd()}/test/fixtures/model-studentData.json`);
 // Much credit for mongodb testing is due to this tutorial: https://www.terlici.com/2014/09/15/node-testing.html
 // TO-DO: refactor this code so it is more similar to my style (return single object for export w/ multi functions)
-const MongoClient = require('mongodb').MongoClient;
 // async = require('async');
 
 const state = {
@@ -16,6 +19,7 @@ const TEST_URI = 'mongodb://localhost/test';
 exports.MODE_TEST = 'mode_test';
 exports.MODE_PRODUCTION = 'mode_production';
 
+// To connect to either the production or the test database
 exports.connect = (mode, done) => {
   if (state.db) return done();
 
@@ -29,34 +33,46 @@ exports.connect = (mode, done) => {
   });
 };
 
+// To get an active database connection
 exports.getDB = function () {
   return state.db;
 };
 
-exports.drop = function (done) {
+// To clear all collections in the database
+exports.drop = (done) => {
   if (!state.db) return done();
   // This is faster then dropping the database
   state.db.collections((err, collections) => {
-    async.each(collections, (collection, cb) => {
+    each(collections, (collection, cb) => {
       if (collection.collectionName.indexOf('system') === 0) {
-        return cb()
+        return cb();
       }
-      collection.remove(cb)
+      collection.remove(cb);
     }, done);
   });
 };
 
-exports.fixtures = function (data, done) {
+// Load data from an array of JSON objects into the database
+exports.fixtures = (arrayOfJSONs, done) => {
   const db = state.db;
   if (!db) {
     return done(new Error('Missing database connection.'));
   }
 
-  const names = Object.keys(data.collections);
-  async.each(name, (name, cb) => {
-    db.createCollection(name, (err, collection) => {
-      if (err) return cb(err)
-      collection.insert(data.collections[name], cb)
-    });
-  }, done);
+  db.createCollection('studentData', (err) => {
+    if (err) return done(err);
+    const studentData = db.collection('studentData');
+    try {
+      studentData.insertMany(arrayOfJSONs);
+    } catch (e) {
+      return done(e);
+    }
+  });
+  //const names = Object.keys(data.collections);
+  // each(array, (name, cb) => {
+  //   db.createCollection(name, (err, collection) => {
+  //     if (err) return cb(err);
+  //     collection.insert(data.collections[name], cb);
+  //   });
+  // }, done);
 };

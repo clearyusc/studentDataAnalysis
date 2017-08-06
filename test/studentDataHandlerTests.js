@@ -1,6 +1,7 @@
 const assert = require('assert');
-const sinon = require('sinon');
-const mongo = require('mongodb');
+//const sinon = require('sinon');
+//const mongo = require('mongodb');
+const db = require(`${process.cwd()}/db.js`);
 
 // const ClickHandler = require(`${process.cwd()}/app/controllers/clickHandler.server.js`);
 const csvConverter = require(`${process.cwd()}/app/csvConverter.js`);
@@ -35,17 +36,36 @@ describe('CSV To MongoDB - test suite', () => {
   });
 
   describe('#writeJSONsToDB', () => {
-    let sandbox;
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-    afterEach(() => {
-      sandbox.restore();
+    // let sandbox;
+    // beforeEach(() => {
+    //   sandbox = sinon.sandbox.create();
+    // });
+    // afterEach(() => {
+    //   sandbox.restore();
+    // });
+
+    // it('should be an empty collection at the start', () => {
+    //   assert.equal(sandbox.stub(mongo.database.collection, 'findOne').return({}), {});
+    // });
+
+    before((done) => {
+      db.connect(db.MODE_TEST, done);
     });
 
-    it('should be an empty collection at the start', () => {
-      assert.equal(sandbox.stub(mongo.database.collection, 'findOne').return({}), {});
+    beforeEach((done) => {
+      db.drop((err) => {
+        if (err) return done(err);
+        db.fixtures(fixtures, done);
+      });
     });
+
+    it('all', (done) => {
+      Comment.all((err, comments) => {
+        comments.length.should.eql(3);
+        done();
+      });
+    });
+
 
     // it('should make a new collection if none exists', (done) => {
     //   // mock the DB
