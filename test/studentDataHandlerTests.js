@@ -23,9 +23,12 @@ describe('CSV To MongoDB', () => {
   describe('#csvToJSON', () => {
     it('should read in the correct amount of objects', (done) => {
       const arrayOfJSONs = [];
-      csvConverter.csvToJSON(`${process.cwd()}/student-mat.csv`, arrayOfJSONs, done());
+      //assert.equal(15, 0);
+      csvConverter.csvToJSON(`${process.cwd()}/student-mat.csv`, arrayOfJSONs, done);
       console.log("array length = "+arrayOfJSONs.length);
-      assert.deepEqual(arrayOfJSONs.length, 395);
+      assert.equal(arrayOfJSONs.length, 395);
+      //assert.deepEqual(15, 0);
+      
     });
   });
 });

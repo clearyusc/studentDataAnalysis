@@ -21,6 +21,8 @@ const csvConverter = {
       const testObj = { cat: 1, dog: 2 };
       arrayOfJSONs.push(testObj);
     });
+    const testObj = { cat: 1, dog: 2 };
+      arrayOfJSONs.push(testObj);
   },
 
 
