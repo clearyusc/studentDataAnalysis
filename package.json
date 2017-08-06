@@ -25,9 +25,11 @@
   "author": "Blake Johnston",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.5.0",
     "csvtojson": "^1.1.7",
     "express": "^4.13.3",
-    "mongodb": "^2.0.42"
+    "mongodb": "^2.0.42",
+    "sinon": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^4.3.0",

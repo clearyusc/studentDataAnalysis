@@ -4,7 +4,7 @@ const routes = require('./app/routes/index.js');
 
 const app = express();
 
-mongo.connect('mongodb://localhost:27017/clementinejs', (err, db) => {
+mongo.connect('mongodb://localhost:27017/studentData', (err, db) => {
   if (err) {
     throw new Error('Database failed to connect!');
   } else {
