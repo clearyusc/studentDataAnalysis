@@ -1,27 +1,11 @@
 const assert = require('assert');
-//const sinon = require('sinon');
-//const mongo = require('mongodb');
-const db = require(`${process.cwd()}/db.js`);
 
-// const ClickHandler = require(`${process.cwd()}/app/controllers/clickHandler.server.js`);
+const fixtures = require(`${process.cwd()}/test/fixtures/model-studentData.json`);
+const DB = require(`${process.cwd()}/db.js`);
 const csvConverter = require(`${process.cwd()}/app/csvConverter.js`);
-// const csvConverter = require('/Users/ryancleary/Development/Projects/studentDataAnalytics/app/csvCo')
-
-// describe('Array', () => {
-//   describe('#indexOf()', () => {
-//     it('should return -1 when the value is not present', () => {
-//       assert.equal(-1, [1, 2, 3].indexOf(4));
-//     });
-//   });
-// });
-
 
 // 1 - Input data from the csv file into the database
 // 2 - Parse the csv data into a JSON object
-
-// function testCSVDataParser() {
-// let studentDataObjects = csvConverter.csvToJSON(`${process.cwd()}/student-mat.csv`);
-// console.log(`THE FILEPATH = ${process.cwd()}/app/csvConverter.js`);
 
 describe('CSV To MongoDB - test suite', () => {
   describe('#csvToJSON', () => {
@@ -36,36 +20,50 @@ describe('CSV To MongoDB - test suite', () => {
   });
 
   describe('#writeJSONsToDB', () => {
-    // let sandbox;
-    // beforeEach(() => {
-    //   sandbox = sinon.sandbox.create();
-    // });
-    // afterEach(() => {
-    //   sandbox.restore();
-    // });
-
-    // it('should be an empty collection at the start', () => {
-    //   assert.equal(sandbox.stub(mongo.database.collection, 'findOne').return({}), {});
-    // });
-
     before((done) => {
-      db.connect(db.MODE_TEST, done);
+      DB.connect(DB.MODE_TEST, done);
     });
-
     beforeEach((done) => {
-      db.drop((err) => {
+      DB.drop((err) => {
         if (err) return done(err);
-        db.fixtures(fixtures, done);
+        DB.fixtures(fixtures, done);
       });
     });
 
-    it('all', (done) => {
-      Comment.all((err, comments) => {
-        comments.length.should.eql(3);
+    it('see if db fixtures set up is working', (done) => {
+      const db = DB.getDB();
+      const studentData = db.collection('studentData');
+      // const sdProjection = { _id: false };
+
+      studentData.find({}).toArray((err, results) => {
+        if (err) {
+          done(err);
+        }
+        if (results) {
+          // console.log("results = "+JSON.stringify(results));
+          // console.log("fixtures = "+JSON.stringify(fixtures));
+          assert.deepEqual(results, fixtures);
+        }
         done();
       });
     });
 
+    it('see if the JSON data is being correctly written to database', (done) => {
+      const db = DB.getDB();
+      try {
+        csvConverter.writeJSONsToDB(db, fixtures, () => {     
+          db.collection('studentData').find({}).toArray((err, results) => {
+            if (err) {
+              done(err);
+            }
+            if (results) assert.deepEqual(results, fixtures);
+          });
+        });
+      } catch (e) {
+        done(e);
+      }
+      done();
+    });
 
     // it('should make a new collection if none exists', (done) => {
     //   // mock the DB

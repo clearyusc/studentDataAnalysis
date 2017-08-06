@@ -1,7 +1,14 @@
-{
+[{
   "school" : "GP",
   "sex" : "F",
   "age" : 18,
   "address" : "U",
   "G3" : 6
-}
+}, 
+{
+  "school" : "GP",
+  "sex" : "M",
+  "age" : 15,
+  "address" : "U",
+  "G3" : 7
+}]
