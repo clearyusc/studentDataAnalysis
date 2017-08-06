@@ -7,13 +7,23 @@ const converter = csv({
 });
 
 const csvConverter = {
-  csvToJSON: (filepath) => {
+  csvToMongoDB: (filepath, db, callback) => {
+    const arrayOfJSONs = [];
+    this.csvToJSON(filepath, arrayOfJSONs, () => {
+      // callback function
+    });
+  },
+
+  csvToJSON: (filepath, arrayOfJSONs, callback) => {
     converter.on('json', (jsonObj, rowIndex) => {
       // jsonObj=> {header1:cell1,header2:cell2} 
       // rowIndex=> number 
+      const testObj = { cat: 1, dog: 2 };
+      arrayOfJSONs.push(testObj);
     });
-    return [1, 2];
   },
+
+
 };
 
 

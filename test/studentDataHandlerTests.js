@@ -1,7 +1,7 @@
 const assert = require('assert');
 // const ClickHandler = require(`${process.cwd()}/app/controllers/clickHandler.server.js`);
 const csvConverter = require(`${process.cwd()}/app/csvConverter.js`);
-//const csvConverter = require('/Users/ryancleary/Development/Projects/studentDataAnalytics/app/csvCo')
+// const csvConverter = require('/Users/ryancleary/Development/Projects/studentDataAnalytics/app/csvCo')
 
 // describe('Array', () => {
 //   describe('#indexOf()', () => {
@@ -17,11 +17,18 @@ const csvConverter = require(`${process.cwd()}/app/csvConverter.js`);
 
 // function testCSVDataParser() {
 // let studentDataObjects = csvConverter.csvToJSON(`${process.cwd()}/student-mat.csv`);
-console.log(`THE FILEPATH = ${process.cwd()}/app/csvConverter.js`);
-assert.equal(
-  csvConverter.csvToJSON(`${process.cwd()}/student-mat.csv`)
-    .length,
-  395);
+// console.log(`THE FILEPATH = ${process.cwd()}/app/csvConverter.js`);
+
+describe('CSV To MongoDB', () => {
+  describe('#csvToJSON', () => {
+    it('should read in the correct amount of objects', (done) => {
+      const arrayOfJSONs = [];
+      csvConverter.csvToJSON(`${process.cwd()}/student-mat.csv`, arrayOfJSONs, done());
+      console.log("array length = "+arrayOfJSONs.length);
+      assert.deepEqual(arrayOfJSONs.length, 395);
+    });
+  });
+});
 // }
 
 // 3 - 
