@@ -1,11 +1,5 @@
 const csv = require('csvtojson');
 
-const csvFilePath = '<path to csv file>';
-
-const converter = csv({
-  delimiter: ';',
-});
-
 const csvConverter = {
   csvToMongoDB: (filepath, db, callback) => {
     const arrayOfJSONs = [];
@@ -14,19 +8,53 @@ const csvConverter = {
     });
   },
 
+  parseCSVHeader: (filepath, arrayOfKeys, callback) => {
+    callback();
+  },
+
   csvToJSON: (filepath, arrayOfJSONs, callback) => {
-    converter.on('json', (jsonObj, rowIndex) => {
-      // jsonObj=> {header1:cell1,header2:cell2} 
-      // rowIndex=> number 
-      const testObj = { cat: 1, dog: 2 };
-      arrayOfJSONs.push(testObj);
-    });
+    console.log('CSV FILE = '+filepath);
+    
+    // csv({
+    //   delimiter: ';',
+    // })
+    //   .fromFile(filepath)
+    //   .on("end_parsed",function(arrayOfJSONs){ //when parse finished, result will be emitted here.
+    //     console.log(arrayOfJSONs); 
+    //     callback();
+    //   })
+
+    csv({
+      delimiter: ';',
+    })
+      .fromFile(filepath)
+      .on('json', (jsonObj) => {
+        console.log('does this ever happen?');
+        arrayOfJSONs.push(jsonObj);
+        // combine csv header row and csv line to a json object 
+        // jsonObj.a ==> 1 or 4 
+      })
+      .on('done', (error) => {
+        if (error) callback(error);
+        arrayOfJSONs.forEach((obj) => {
+          console.log(JSON.stringify(obj));
+        });
+        console.log('end');
+        callback();
+      });
+
+    // converter.on('json', (jsonObj, rowIndex) => {
+    //   // jsonObj=> {header1:cell1,header2:cell2} 
+    //   // rowIndex=> number 
+    //   const testObj = { cat: 1, dog: 2 };
+    //   arrayOfJSONs.push(testObj);
+    // });
   },
 
   writeJSONsToDB: (db, arrayOfJSONs, callback) => {
     const studentData = db.collection('studentData');
     const sdProjection = { _id: false };
-    
+
     // All we need to do is INSERT for now
     studentData.findOne({}, sdProjection, (err, result) => {
       if (err) {
@@ -34,7 +62,7 @@ const csvConverter = {
       }
 
       if (result) {
-        //res.json(result);
+        // res.json(result);
         // We want to start with fresh data each time we load this program.
         db.studentData.deleteMany({});
       } else {
