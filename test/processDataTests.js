@@ -6,14 +6,27 @@ const DB = require(`${process.cwd()}/db.js`);
 
 
 describe('Process Data - test suite', () => {
-  // describe('#averageXBasedOnY', () => {
-  //   it('Should correctly calculate the average X for some Y', (done) => {
-  //     const arrayOfJSONs = [];
-  //     processData.averageXForY(x, y, (obj) => {
-  //       assert.equal(obj.average);
-  //     });
-  //   });
-  // });
+  describe('#averageXBasedOnY', () => {
+    before((done) => {
+      DB.connect(DB.MODE_TEST, done);
+    });
+    beforeEach((done) => {
+      DB.drop((err) => {
+        if (err) return done(err);
+        DB.fixtures(fixtures, done);
+      });
+    });
+
+    it('Should correctly calculate the average X for some Y', (done) => {      
+      //  avgXForY: (xKey, yKey, yVal, dbCollection) => {
+      const db = DB.getDB();
+      const studentData = db.collection('studentData');
+
+      processData.avgXForY('G3', 'sex', 'M', studentData, (result) => {
+        assert.equal(result, 15);
+      });
+    });
+  });
 
 
   describe('#findsDocsWithValueForKey', () => {

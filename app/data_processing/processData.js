@@ -20,19 +20,49 @@ const processData = {
     });
   },
 
-  avgXForY: (xAttr, yAttr, yVal, dbCollection) => {
+  // e.g. Find the average final grade (xKey) for students who had internet at home (yVal for yKey)
+  avgXForY: (xKey, yKey, yVal, dbCollection, done) => {
     // check x, y !Exist in data keyset
     // find(query, projection)
-    dbCollection.find({ yAttr: { $eq: yVal } }).toArray((err, results) => {
-      if (err) {
-        done(err);
-      }
-      if (results) {
-        // console.log("results = "+JSON.stringify(results));
-        // console.log("fixtures = "+JSON.stringify(fixtures));
-        // assert.deepEqual(results, fixtures);
-      }
+    const query = {};
+    query[yKey] = yVal;
+
+    //    dbCollection.aggregate([{ $group: { avgXKey: { $avg: xKey } } }]);
+
+    dbCollection.aggregate([
+      { $match: query },
+      {
+        $group: {
+          _id: null,
+          avgXValue: {
+            $avg: 'G3',
+          },
+        },
+      },
+    ]).toArray((err, results) => {
+      results.forEach((item) => {
+        console.log(JSON.stringify(item));
+      });
+      done(results[0].avgXValue);
     });
+
+    // dbCollection.aggregate(
+    //   [{ $match: query }],
+    //   [{ $project: { _id: 0, yKey: 1 } }],
+    //   [{ $group: null, avgXKey: { $avg: xKey } }]).toArray((err, results) => {
+    //   // [{ $group: null, avg: { $avg: xKey } }]).toArray((err, results) => {
+    //   if (err) done(err);
+
+    //   console.log('RESULTS = ');
+    //   results.forEach((item) => {
+    //     console.log(JSON.stringify(item));
+    //   });
+    //   done(results.avgXKey);
+    // });
+    // processData.findDocsWithValueForKey(yVal, yKey, dbCollection, () => {
+
+    // });
+    done();
   },
 };
 
