@@ -24,24 +24,28 @@ const csvConverter = {
     //     callback();
     //   })
 
+    // const parser = csvParse({ delimiter: ';' }, (err, data) => {
+    //   console.log(data);
+    // });
+    // fs.createReadStream(filepath).pipe(parser);
+
     csv({
       delimiter: ';',
     })
       .fromFile(filepath)
-      .on('json', (jsonObj) => {
-        console.log('does this ever happen?');
+      .on('json', (jsonObj) => {        
         arrayOfJSONs.push(jsonObj);
         // combine csv header row and csv line to a json object 
         // jsonObj.a ==> 1 or 4 
       })
       .on('done', (error) => {
         if (error) callback(error);
-        arrayOfJSONs.forEach((obj) => {
-          console.log(JSON.stringify(obj));
-        });
-        console.log('end');
+        // arrayOfJSONs.forEach((obj) => {
+        //   console.log(JSON.stringify(obj, undefined, 2));
+        // });
+        console.log('end csv to JSON');
         callback();
-      });
+      }); 
 
     // converter.on('json', (jsonObj, rowIndex) => {
     //   // jsonObj=> {header1:cell1,header2:cell2} 
