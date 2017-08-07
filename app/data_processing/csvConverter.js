@@ -1,58 +1,20 @@
 const csv = require('csvtojson');
 
 const csvConverter = {
-  csvToMongoDB: (filepath, db, callback) => {
-    const arrayOfJSONs = [];
-    this.csvToJSON(filepath, arrayOfJSONs, () => {
-      // callback function
-    });
-  },
-
-  parseCSVHeader: (filepath, arrayOfKeys, callback) => {
-    callback();
-  },
-
   csvToJSON: (filepath, arrayOfJSONs, callback) => {
-    console.log('CSV FILE = '+filepath);
-    
-    // csv({
-    //   delimiter: ';',
-    // })
-    //   .fromFile(filepath)
-    //   .on("end_parsed",function(arrayOfJSONs){ //when parse finished, result will be emitted here.
-    //     console.log(arrayOfJSONs); 
-    //     callback();
-    //   })
-
-    // const parser = csvParse({ delimiter: ';' }, (err, data) => {
-    //   console.log(data);
-    // });
-    // fs.createReadStream(filepath).pipe(parser);
-
     csv({
       delimiter: ';',
     })
       .fromFile(filepath)
-      .on('json', (jsonObj) => {        
+      .on('json', (jsonObj) => {
         arrayOfJSONs.push(jsonObj);
         // combine csv header row and csv line to a json object 
         // jsonObj.a ==> 1 or 4 
       })
       .on('done', (error) => {
         if (error) callback(error);
-        // arrayOfJSONs.forEach((obj) => {
-        //   console.log(JSON.stringify(obj, undefined, 2));
-        // });
-        console.log('end csv to JSON');
         callback();
-      }); 
-
-    // converter.on('json', (jsonObj, rowIndex) => {
-    //   // jsonObj=> {header1:cell1,header2:cell2} 
-    //   // rowIndex=> number 
-    //   const testObj = { cat: 1, dog: 2 };
-    //   arrayOfJSONs.push(testObj);
-    // });
+      });
   },
 
   writeJSONsToDB: (db, arrayOfJSONs, callback) => {
@@ -85,8 +47,18 @@ const csvConverter = {
         });
       }
     });
+
+    callback();
   },
 
+  csvToMongoDB: (filepath, db, callback) => {
+    const arrayOfJSONs = [];
+    csvConverter.csvToJSON(filepath, arrayOfJSONs, () => {
+      csvConverter.writeJSONsToDB(db, arrayOfJSONs, () => {
+        callback();
+      });
+    });
+  },
 };
 
 module.exports = csvConverter;

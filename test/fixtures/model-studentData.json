@@ -10,5 +10,19 @@
   "sex" : "M",
   "age" : 15,
   "address" : "U",
+  "G3" : 10
+},
+{
+  "school" : "GP",
+  "sex" : "M",
+  "age" : 16,
+  "address" : "U",
+  "G3" : 10
+},
+{
+  "school" : "GP",
+  "sex" : "F",
+  "age" : 17,
+  "address" : "U",
   "G3" : 7
 }]

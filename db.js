@@ -3,7 +3,7 @@ const MongoClient = require('mongodb').MongoClient;
 // Much credit for mongodb testing is due to this tutorial: https://www.terlici.com/2014/09/15/node-testing.html
 // TO-DO: refactor this code so it is more similar to my style (return single object for export w/ multi functions)
 
-let state = {
+const state = {
   db: null,
   mode: null,
 };
