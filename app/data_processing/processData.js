@@ -20,74 +20,66 @@ const processData = {
     });
   },
 
-  // e.g. Find the average final grade (xKey) for students who had internet at home (yVal for yKey)
-  avgXForY: (xKey, yKey, yVal, dbCollection, done) => {
-    // check x, y !Exist in data keyset
-    // find(query, projection)
-    const query = {};
-    query[yKey] = yVal;
-
-    // TODO: use allVals = dbCollection.disctint(xKey) to programatically make _id: {xKey:allVals[0..n]}
-    // HARD CODE FIRST TO LEARN IT:
-
-    const aggXKey = `$${xKey}`;
-    const aggYKey = `$${yKey}`;
-
+  // e.g. Find the average final grade (xKey) based on whether or not a student had internet (yKey)
+  avgXForY: (xKey, yKey, dbCollection, done) => {
+    const queryXKey = `$${xKey}`;
+    const queryYKey = `$${yKey}`;
+    //console.log(dbCollection);
     dbCollection.aggregate([
       {
         $group: {
-          _id: { sex: aggYKey },
+          _id: queryYKey,
           avgXValue: {
-            $avg: aggXKey,
+            $avg: queryXKey,
           },
         },
       },
     ]).toArray((err, results) => {
       if (err) done(err);
       results.forEach((item) => {
-        console.log("RESULT = "+JSON.stringify(item));
+        console.log('RESULT = ' + JSON.stringify(item));
+        //resultsArray.push(item);
       });
       done(null, results); // 'null' because there is no error
     });
-
-
-    // processData.avgXForY('G3', 'sex', 'M', studentData, (result))
-    //    dbCollection.aggregate([{ $group: { avgXKey: { $avg: xKey } } }]);
-    // average final grade based on 
-    // dbCollection.aggregate([
-    //   {
-    //     $group: {
-    //       _id: yKey,
-    //       avgXValue: {
-    //         $avg: xKey,
-    //       },
-    //     },
-    //   },
-    // ]).toArray((err, results) => {
-    //   results.forEach((item) => {
-    //     console.log("RESULT = "+JSON.stringify(item));
-    //   });
-    //   done(results[0].avgXValue);
-    // });
-
-    // dbCollection.aggregate(
-    //   [{ $match: query }],
-    //   [{ $project: { _id: 0, yKey: 1 } }],
-    //   [{ $group: null, avgXKey: { $avg: xKey } }]).toArray((err, results) => {
-    //   // [{ $group: null, avg: { $avg: xKey } }]).toArray((err, results) => {
-    //   if (err) done(err);
-
-    //   console.log('RESULTS = ');
-    //   results.forEach((item) => {
-    //     console.log(JSON.stringify(item));
-    //   });
-    //   done(results.avgXKey);
-    // });
-    // processData.findDocsWithValueForKey(yVal, yKey, dbCollection, () => {
-
-    // });
-    done();
+    //done();
   },
+
+  // // e.g. Generate data points for a graph of travel time to overall grade
+  // compareXAndY: (xKey, yKey, dbCollection, resultsArray, done) => {
+  //   const queryXKey = `$${xKey}`;
+  //   const queryYKey = `$${yKey}`;
+
+  //   dbCollection.aggregate([
+  //     {
+  //       $projection: {
+  //         _id: `${xKey} vs. ${yKey}`,
+  //         xKey: 1,
+  //         yKey: 1,
+  //       },
+  //     },
+  //   ]).toArray((err, results) => {
+  //     if (err) done(err);
+  //     results.forEach((item) => {
+  //       console.log('RESULT = ' + JSON.stringify(item));
+  //       resultsArray.push(item);
+  //     });
+  //     done(null, results); // 'null' because there is no error
+  //   });
+  //   done();
+  // },
 };
 
 module.exports = processData;
+
+/*
+dbCollection.aggregate([
+      {
+        $group: {
+          _id: { yKey: aggYKey },
+          avgXValue: {
+            $avg: aggXKey,
+          },
+        },
+      },
+      */

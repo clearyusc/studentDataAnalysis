@@ -3,7 +3,7 @@ const assert = require('assert');
 const fixtures = require(`${process.cwd()}/test/fixtures/model-studentData.json`);
 const processData = require(`${process.cwd()}/app/data_processing/processData.js`);
 const DB = require(`${process.cwd()}/db.js`);
-
+ 
 
 describe('Process Data - test suite', () => {
   describe('#averageXBasedOnY', () => {
@@ -21,20 +21,21 @@ describe('Process Data - test suite', () => {
       const db = DB.getDB();
       const studentData = db.collection('studentData');
 
-      processData.avgXForY('G3', 'sex', 'M', studentData, (err, results) => {
+      //processData.avgXForY('G3', 'sex', 'M', studentData, arr, (err, results) => {
+      processData.avgXForY('G3', 'sex', studentData, (err, results) => {
         if (err) done(err);
-
-        console.log("___DIS = "+results);
+        console.log('results1:', JSON.stringify(results));
         let a = [];
-        a = a.concat(results);
-        let b = [];
-        a.forEach((element) => {
-          console.log(JSON.stringify(element, null, 2));
-          b.push(JSON.parse(element));
-        }, this);          
         
-        console.log("THEES FIRST = "+JSON.stringify(b, null, 2));
-        assert.equal(b[0]['avgXValue'], 15);
+        results.forEach((elem)=>{
+          console.log(JSON.parse(JSON.stringify(elem)));
+        });
+
+        console.log("arr length = "+results.length);
+        //let k = JSON.parse(JSON.stringify(arr[0]));
+        console.log('typeof = '+typeof results[0]);
+        console.log("arr[0] = "+JSON.stringify(results[0], null, 2));
+        assert.equal(results[0]['avgXValue'], 15);
         done();
       });
     });
