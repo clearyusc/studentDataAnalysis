@@ -36,15 +36,13 @@ describe('Process Data - test suite', () => {
   describe('#compareXAndY', () => {
     prepareTestDatabase();
 
-    it.only('Should return the correct data pair for the given input', (done) => {
+    it('Should return the correct data pair for the given input', (done) => {
       const db = DB.getDB();
       const studentData = db.collection('studentData');
-//xKey, yKey, dbCollection, done) => {
-      processData.compareXAndY('age', 'G3', studentData, (results) => {
-        console.log('comppare results =');
-        results.array.forEach((item) => {
-          console.log('item = ', item);
-        });
+
+      processData.compareXAndY('age', 'G3', studentData, (err, results) => {
+        if (err) done(err);
+        
         assert.equal(results[0].age, 15);
         assert.equal(results[0].G3, 10);
         done();

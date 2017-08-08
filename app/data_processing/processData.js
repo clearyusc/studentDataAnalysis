@@ -38,27 +38,40 @@ const processData = {
 
   // e.g. Generate data points for a graph of travel time to overall grade
   compareXAndY: (xKey, yKey, dbCollection, done) => {
-    const queryXKey = `$${xKey}`;
-    const queryYKey = `$${yKey}`;
+    const projectQuery = { _id: `${xKey} vs. ${yKey}` };
+    projectQuery[xKey] = true;
+    projectQuery[yKey] = true;
 
+    const sortQuery = {};
+    sortQuery[xKey] = 1;
+    
     dbCollection.aggregate([
       {
-        $project: {
-          //_id: `${xKey} vs. ${yKey}`,
-          queryXKey: 1,
-          queryYKey: 1,
-        },
-        $sort: {
-          queryXKey: 1, // ascending based on the xKey
-        },
+        $project: projectQuery,
+      },
+      {
+        $sort: sortQuery,
       },
     ]).toArray((err, results) => {
-      if (err) done(err);
-      results.forEach((item) => {
-        console.log(`RESULT = ${ JSON.stringify(item)}`);
-      });
+      if (err) done(err, null);
+      
       done(null, results); // 'null' because there is no error
     });
+    // dbCollection.aggregate([
+    //   {
+    //     $project: {
+    //       _id: `${xKey} vs. ${yKey}`,
+    //       queryXKey: 1,
+    //       queryYKey: 1,
+    //     },
+    //   },
+    // ]).toArray((err, results) => {
+    //   if (err) done(err);
+    //   results.forEach((item) => {
+    //     console.log(`RESULT = ${JSON.stringify(item)}`);
+    //   });
+    //   done(null, results); // 'null' because there is no error
+    // });
   },
 };
 
