@@ -11,12 +11,8 @@ const processData = {
     const query = {};
     query[key] = value;
     dbCollection.find(query).toArray((err, results) => {
-      if (err) {
-        done(err);
-      }
-      if (results) {
-        done(results);
-      }
+      if (err) done(err);
+      if (results) done(results);
     });
   },
 
@@ -24,7 +20,7 @@ const processData = {
   avgXForY: (xKey, yKey, dbCollection, done) => {
     const queryXKey = `$${xKey}`;
     const queryYKey = `$${yKey}`;
-    //console.log(dbCollection);
+
     dbCollection.aggregate([
       {
         $group: {
@@ -36,38 +32,34 @@ const processData = {
       },
     ]).toArray((err, results) => {
       if (err) done(err);
+      done(null, results); // 'null' because there is no error
+    });
+  },
+
+  // e.g. Generate data points for a graph of travel time to overall grade
+  compareXAndY: (xKey, yKey, dbCollection, done) => {
+    const queryXKey = `$${xKey}`;
+    const queryYKey = `$${yKey}`;
+
+    dbCollection.aggregate([
+      {
+        $project: {
+          //_id: `${xKey} vs. ${yKey}`,
+          queryXKey: 1,
+          queryYKey: 1,
+        },
+        $sort: {
+          queryXKey: 1, // ascending based on the xKey
+        },
+      },
+    ]).toArray((err, results) => {
+      if (err) done(err);
       results.forEach((item) => {
-        console.log('RESULT = ' + JSON.stringify(item));
-        //resultsArray.push(item);
+        console.log(`RESULT = ${ JSON.stringify(item)}`);
       });
       done(null, results); // 'null' because there is no error
     });
-    //done();
   },
-
-  // // e.g. Generate data points for a graph of travel time to overall grade
-  // compareXAndY: (xKey, yKey, dbCollection, resultsArray, done) => {
-  //   const queryXKey = `$${xKey}`;
-  //   const queryYKey = `$${yKey}`;
-
-  //   dbCollection.aggregate([
-  //     {
-  //       $projection: {
-  //         _id: `${xKey} vs. ${yKey}`,
-  //         xKey: 1,
-  //         yKey: 1,
-  //       },
-  //     },
-  //   ]).toArray((err, results) => {
-  //     if (err) done(err);
-  //     results.forEach((item) => {
-  //       console.log('RESULT = ' + JSON.stringify(item));
-  //       resultsArray.push(item);
-  //     });
-  //     done(null, results); // 'null' because there is no error
-  //   });
-  //   done();
-  // },
 };
 
 module.exports = processData;

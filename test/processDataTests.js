@@ -3,65 +3,58 @@ const assert = require('assert');
 const fixtures = require(`${process.cwd()}/test/fixtures/model-studentData.json`);
 const processData = require(`${process.cwd()}/app/data_processing/processData.js`);
 const DB = require(`${process.cwd()}/db.js`);
- 
+
+function prepareTestDatabase() {
+  before((done) => {
+    DB.connect(DB.MODE_TEST, done);
+  });
+  beforeEach((done) => {
+    DB.drop((err) => {
+      if (err) return done(err);
+      DB.fixtures(fixtures, done);
+    });
+  });
+}
+
 
 describe('Process Data - test suite', () => {
-  describe('#averageXBasedOnY', () => {
-    before((done) => {
-      DB.connect(DB.MODE_TEST, done);
-    });
-    beforeEach((done) => {
-      DB.drop((err) => {
-        if (err) return done(err);
-        DB.fixtures(fixtures, done);
-      });
-    });
+  prepareTestDatabase();
 
-    it('Should correctly calculate the average X for some Y', (done) => {
+  it('Should correctly calculate the average X for some Y', (done) => {
+    const db = DB.getDB();
+    const studentData = db.collection('studentData');
+
+    processData.avgXForY('G3', 'sex', studentData, (err, results) => {
+      if (err) done(err);
+
+      assert.equal(results[0].avgXValue, 15);
+      done();
+    });
+  });
+
+
+  describe('#compareXAndY', () => {
+    prepareTestDatabase();
+
+    it.only('Should return the correct data pair for the given input', (done) => {
       const db = DB.getDB();
       const studentData = db.collection('studentData');
-
-      //processData.avgXForY('G3', 'sex', 'M', studentData, arr, (err, results) => {
-      processData.avgXForY('G3', 'sex', studentData, (err, results) => {
-        if (err) done(err);
-        console.log('results1:', JSON.stringify(results));
-        let a = [];
-        
-        results.forEach((elem)=>{
-          console.log(JSON.parse(JSON.stringify(elem)));
+//xKey, yKey, dbCollection, done) => {
+      processData.compareXAndY('age', 'G3', studentData, (results) => {
+        console.log('comppare results =');
+        results.array.forEach((item) => {
+          console.log('item = ', item);
         });
-
-        console.log("arr length = "+results.length);
-        //let k = JSON.parse(JSON.stringify(arr[0]));
-        console.log('typeof = '+typeof results[0]);
-        console.log("arr[0] = "+JSON.stringify(results[0], null, 2));
-        assert.equal(results[0]['avgXValue'], 15);
+        assert.equal(results[0].age, 15);
+        assert.equal(results[0].G3, 10);
         done();
       });
     });
-
-    // it('Should correctly calculate the average X for some Y', (done) => {
-    //   const db = DB.getDB();
-    //   const studentData = db.collection('studentData');
-
-    //   processData.avgXForY('G3', 'sex', 'M', studentData, (results) => {
-    //     assert.equal(results[0].avgXValue, 15);
-    //     done();
-    //   });
-    // });
   });
 
 
   describe('#findsDocsWithValueForKey', () => {
-    before((done) => {
-      DB.connect(DB.MODE_TEST, done);
-    });
-    beforeEach((done) => {
-      DB.drop((err) => {
-        if (err) return done(err);
-        DB.fixtures(fixtures, done);
-      });
-    });
+    prepareTestDatabase();
 
     it('Should find the right number of documents with the given value', (done) => {
       const db = DB.getDB();
