@@ -27,24 +27,48 @@ const processData = {
     const query = {};
     query[yKey] = yVal;
 
-    //    dbCollection.aggregate([{ $group: { avgXKey: { $avg: xKey } } }]);
+    // TODO: use allVals = dbCollection.disctint(xKey) to programatically make _id: {xKey:allVals[0..n]}
+    // HARD CODE FIRST TO LEARN IT:
+
+    const aggXKey = `$${xKey}`;
+    const aggYKey = `$${yKey}`;
 
     dbCollection.aggregate([
-      { $match: query },
       {
         $group: {
-          _id: null,
+          _id: { sex: aggYKey },
           avgXValue: {
-            $avg: 'G3',
+            $avg: aggXKey,
           },
         },
       },
     ]).toArray((err, results) => {
+      if (err) done(err);
       results.forEach((item) => {
-        console.log(JSON.stringify(item));
+        console.log("RESULT = "+JSON.stringify(item));
       });
-      done(results[0].avgXValue);
+      done(null, results); // 'null' because there is no error
     });
+
+
+    // processData.avgXForY('G3', 'sex', 'M', studentData, (result))
+    //    dbCollection.aggregate([{ $group: { avgXKey: { $avg: xKey } } }]);
+    // average final grade based on 
+    // dbCollection.aggregate([
+    //   {
+    //     $group: {
+    //       _id: yKey,
+    //       avgXValue: {
+    //         $avg: xKey,
+    //       },
+    //     },
+    //   },
+    // ]).toArray((err, results) => {
+    //   results.forEach((item) => {
+    //     console.log("RESULT = "+JSON.stringify(item));
+    //   });
+    //   done(results[0].avgXValue);
+    // });
 
     // dbCollection.aggregate(
     //   [{ $match: query }],

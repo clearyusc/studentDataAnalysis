@@ -65,7 +65,7 @@ describe('CSV To MongoDB - test suite', () => {
         if (results) {
           // console.log("results = "+JSON.stringify(results));
           // console.log("fixtures = "+JSON.stringify(fixtures));
-          assert.deepEqual(results, fixtures);
+          assert.equal(results, fixtures);
         }
         done();
       });

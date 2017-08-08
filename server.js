@@ -1,5 +1,5 @@
 const express = require('express');
-//const mongo = require('mongodb');
+// const mongo = require('mongodb');
 const routes = require('./app/routes/index.js');
 const db = require('./db.js');
 
