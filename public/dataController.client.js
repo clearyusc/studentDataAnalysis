@@ -1,10 +1,9 @@
-
 (function () {
   const calcAvgButton = document.querySelector('#btn-calc-avg');
   const beginButton = document.querySelector('#btn-begin');
   const dataAvgNumber = document.querySelector('#show-data-avg');
-
-  // const deleteButton = document.querySelector('.btn-delete');
+  
+  // // const deleteButton = document.querySelector('.btn-delete');
   // const clickNbr = document.querySelector('#click-nbr');
   const dataAPIURL = 'http://localhost:3000/api/data';
 
@@ -46,8 +45,8 @@
 
 
   // *** WARNING ABOUT THIS CODE ONE LINE BELOW! ****
-  ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); //TODO: This might cause a problem bc the url is hardcoded...
-  ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase)); 
+  ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); // TODO: This might cause a problem bc the url is hardcoded...
+  ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
 
   calcAvgButton.addEventListener('click', () => {
     const xKey = 'G3'; // TODO: load the XKey from the searchbar1
