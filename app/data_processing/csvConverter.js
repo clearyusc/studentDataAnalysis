@@ -48,8 +48,9 @@ const csvConverter = {
         }
       }
       if (arrayOfJSONs.length <= 0) {
-        console.log('BIG PROBLEM: EMPTY ARRAY');
+        callback(new Error('Tried to insert an empty array into the database. CSV file read error or emtpy CSV file.'));
       }
+
       studentData.insertMany(arrayOfJSONs, (err2) => {
         if (err2) {
           callback(err2);
@@ -59,7 +60,7 @@ const csvConverter = {
           if (err3) {
             callback(err3);
           }
-          console.log(`Found the following student docs: ${studentDataResults}`);
+          //console.log(`Found the following student docs: ${JSON.stringify(studentDataResults, null, 2)}`);
           callback(); // successfully callback
         });
       });

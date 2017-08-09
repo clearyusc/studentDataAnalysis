@@ -41,11 +41,11 @@
   }
 
 
-  // *** WARNING ABOUT THIS CODE ONE LINE BELOW! ****  
-  ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
+  // *** the ready function simply loads something on PAGE LOAD ***
+  //ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
 
   calcAvgButton.addEventListener('click', () => {
-    ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); // TODO: This might cause a problem bc the url is hardcoded...
+    //ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); // TODO: This might cause a problem bc the url is hardcoded...
     const xKey = 'G3'; // TODO: load the XKey from the searchbar1
     const yKey = 'sex'; // TODO: load the yKey from the searchbar2
 

@@ -38,6 +38,7 @@ exports.getDB = () => state.db;
 exports.drop = (done) => {
   if (!state.db) return done();
   // This is faster then dropping the database
+  //state.db.collection('studentData').remove({});
   state.db.collections((err, collections) => {
     async.each(collections, (collection, cb) => {
       if (collection.collectionName.indexOf('system') === 0) {
