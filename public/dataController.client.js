@@ -77,5 +77,9 @@
 5. Asynch return that and display to html.
 6. Display a graph
 
+notes:
+- need to give public access to this file somehow or just copy it to public/
+- need to figure out a way to upload file easily
+- DO THE BARE MINIMUM AND DO A GOOD JOB!
 
   */

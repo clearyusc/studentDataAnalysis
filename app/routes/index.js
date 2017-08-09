@@ -21,7 +21,7 @@ module.exports = function (app, db) {
     });
 
   app.route('/api/data/csvtomongo')
-    .get((req, res) => {
+    .get((req, res) => {      
       const filepath = `${process.cwd()}/student-mat.csv`;
       csvConverter.csvToMongoDB(filepath, db, (err) => {
         if (err) {
