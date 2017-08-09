@@ -1,7 +1,7 @@
 
 
 (function () {
-  const addButton = document.querySelector('.btn-add');
+  const addButton = document.querySelector('#btn-upload-file');
   const deleteButton = document.querySelector('.btn-delete');
   const clickNbr = document.querySelector('#click-nbr');
   const apiUrl = 'http://localhost:3000/api/clicks';

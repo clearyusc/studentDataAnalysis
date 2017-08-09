@@ -5,6 +5,7 @@
 <head>
     <title>Student Data Analysis</title>
     <link href="http://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>    
     <link href="/public/css/main.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -16,15 +17,44 @@
     </div>
 
     <div class="container">
-        <p>You have clicked the button <span id="click-nbr"></span> times.</p>
+        
+        <div class="ui search">
+            <div class="ui icon input">
+                <input class="prompt" type="text" placeholder="Search countries...">
+                <i class="search icon"></i>
+            </div>
+            <div class="results"></div>        
+        </div>
+        
         <br />
-        <div class="btn-container">
+
+        <label class="btn btn-primary" for="my-file-selector">
+            <input id="my-file-selector" type="file" style="display:none" 
+            onchange="$('#upload-file-info').html(this.files[0].name)">
+            Choose Data File
+            </label>
+        <span class='label label-info' id="upload-file-info"></span>
+        <br />
+        <button class="btn btn-success" id="btn-upload-file">Upload File</button>
+
+        <br />
+        <br />
+        <div class="btn-container">            
             <button type="submit" class="btn btn-add">CLICK ME!</button>
             <button class="btn btn-delete">RESET</button>
         </div>
+        <br />
+        <br />
+        <span id="show-data-avg"></span>
+
+        <br />
+        <br />
+        <button class="btn btn-warning" id="btn-calc-avg">Upload File</button>
+
     </div>
 
     <script type="text/javascript" src="/controllers/clickController.client.js"></script>
+    <script type="text/javascript" src="/controllers/dataController.client.js"></script>
 </body>
 
 </html>
