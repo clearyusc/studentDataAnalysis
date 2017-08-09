@@ -44,7 +44,7 @@ const processData = {
 
     const sortQuery = {};
     sortQuery[xKey] = 1;
-    
+
     dbCollection.aggregate([
       {
         $project: projectQuery,
@@ -54,37 +54,10 @@ const processData = {
       },
     ]).toArray((err, results) => {
       if (err) done(err, null);
-      
+
       done(null, results); // 'null' because there is no error
     });
-    // dbCollection.aggregate([
-    //   {
-    //     $project: {
-    //       _id: `${xKey} vs. ${yKey}`,
-    //       queryXKey: 1,
-    //       queryYKey: 1,
-    //     },
-    //   },
-    // ]).toArray((err, results) => {
-    //   if (err) done(err);
-    //   results.forEach((item) => {
-    //     console.log(`RESULT = ${JSON.stringify(item)}`);
-    //   });
-    //   done(null, results); // 'null' because there is no error
-    // });
   },
 };
 
 module.exports = processData;
-
-/*
-dbCollection.aggregate([
-      {
-        $group: {
-          _id: { yKey: aggYKey },
-          avgXValue: {
-            $avg: aggXKey,
-          },
-        },
-      },
-      */

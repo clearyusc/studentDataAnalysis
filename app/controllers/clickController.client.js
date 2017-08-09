@@ -18,6 +18,7 @@
     document.addEventListener('DOMContentLoaded', fn, false);
   }
 
+  // Wrapper with boilerplate code to easily implement an AJAX Request
   function ajaxRequest(method, url, callback) {
     const xmlhttp = new XMLHttpRequest();
 

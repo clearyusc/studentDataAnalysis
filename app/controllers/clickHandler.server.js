@@ -1,6 +1,6 @@
 
 
-function clickHandler(db) {
+/*function clickHandler(db) {
   const clicks = db.collection('clicks');
 
   this.getClicks = function (req, res) {
@@ -52,3 +52,4 @@ function clickHandler(db) {
 }
 
 module.exports = clickHandler;
+*/
