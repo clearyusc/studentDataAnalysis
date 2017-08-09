@@ -2,11 +2,8 @@
   const calcAvgButton = document.querySelector('#btn-calc-avg');
   const beginButton = document.querySelector('#btn-begin');
   const dataAvgNumber = document.querySelector('#show-data-avg');
-
-  dataAvgNumber.innerHTML = 'v1.0';
-  // // const deleteButton = document.querySelector('.btn-delete');
-  // const clickNbr = document.querySelector('#click-nbr');
   const dataAPIURL = 'http://localhost:3000/api/data';
+  dataAvgNumber.innerHTML = 'v1.0';
 
   function ready(fn) {
     if (typeof fn !== 'function') {
@@ -39,17 +36,16 @@
     dataAvgNumber.innerHTML = studentDataObj.clicks;
   }
 
-  function sendCSVToDatabase() {
-    dataAvgNumber.innerHTML = 'successfully input csv into database';
-    document.window.alert('successfully input csv into database');
+  function sendCSVToDatabase(response) {
+    dataAvgNumber.innerHTML = `${response}`;
   }
 
 
-  // *** WARNING ABOUT THIS CODE ONE LINE BELOW! ****
-  ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); // TODO: This might cause a problem bc the url is hardcoded...
+  // *** WARNING ABOUT THIS CODE ONE LINE BELOW! ****  
   ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
 
   calcAvgButton.addEventListener('click', () => {
+    ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); // TODO: This might cause a problem bc the url is hardcoded...
     const xKey = 'G3'; // TODO: load the XKey from the searchbar1
     const yKey = 'sex'; // TODO: load the yKey from the searchbar2
 
@@ -57,10 +53,11 @@
   });
 
   beginButton.addEventListener('click', () => {
-    dataAvgNumber.innerHTML = 'did it work?';
+    dataAvgNumber.innerHTML = 'begin button pressed... waiting for AJAX response';
     ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase);
   });
 })();
+
 // SEARCH UI!
 //   $('.ui.search')
 //     .search({

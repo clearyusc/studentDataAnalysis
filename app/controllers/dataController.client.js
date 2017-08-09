@@ -47,7 +47,7 @@
 
   // *** WARNING ABOUT THIS CODE ONE LINE BELOW! ****
   ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); //TODO: This might cause a problem bc the url is hardcoded...
-  ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase)); 
+  ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
 
   calcAvgButton.addEventListener('click', () => {
     const xKey = 'G3'; // TODO: load the XKey from the searchbar1

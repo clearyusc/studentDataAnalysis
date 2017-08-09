@@ -14,7 +14,7 @@ db.connect(db.MODE_PRODUCTION, (err) => {
   app.use('/public', express.static(`${process.cwd()}/public`));
   app.use('/controllers', express.static(`${process.cwd()}/app/controllers`));
 
-  routes(app, db);
+  routes(app, db.getDB());
 
   app.listen(3000, () => {
     console.log('Node.js listening on port 3000...');

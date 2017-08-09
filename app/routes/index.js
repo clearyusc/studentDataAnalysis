@@ -21,16 +21,37 @@ module.exports = function (app, db) {
     });
 
   app.route('/api/data/csvtomongo')
-    .get((req, res) => {      
+    .get((req, res) => {
       const filepath = `${process.cwd()}/student-mat.csv`;
       csvConverter.csvToMongoDB(filepath, db, (err) => {
         if (err) {
-          res.send('Error! Problem parsing csv and storing it on the database:', err);
+          // 500 = Internal Server Error
+          res.status(404).send(err);
+          // res.send('Error! Problem parsing csv and storing it on the database:', err);
         } else {
           res.send('Successfully stored the csv on the database!');
         }
       });
     });
+
+  app.use((req, res, next) => {
+    res.status(404);
+
+    // respond with html page
+    if (req.accepts('html')) {
+      res.render('404', { url: req.url });
+      return;
+    }
+
+    // respond with json
+    if (req.accepts('json')) {
+      res.send({ error: 'Not found' });
+      return;
+    }
+
+    // default to plain-text. send()
+    res.type('txt').send('Not found');
+  });
 
   // .post(clickHandler.addClick)
   // .delete(clickHandler.resetClicks);
