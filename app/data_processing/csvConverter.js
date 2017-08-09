@@ -24,7 +24,7 @@ const csvConverter = {
     // All we need to do is INSERT for now
     studentData.findOne({}, sdProjection, (err, result) => {
       if (err) {
-        throw err;
+        callback(err);
       }
 
       if (result) {
@@ -34,12 +34,12 @@ const csvConverter = {
       } else {
         studentData.insertMany(arrayOfJSONs, (err2) => {
           if (err2) {
-            throw err2;
+            callback(err2);
           }
 
           studentData.find({}, sdProjection).toArray((err3, studentDataResults) => {
             if (err3) {
-              throw err3;
+              callback(err3);
             }
 
             console.log(`Found the following student docs: ${studentDataResults}`);

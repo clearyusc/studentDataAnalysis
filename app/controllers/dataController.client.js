@@ -1,12 +1,12 @@
+
 (function () {
-  const uploadFileButton = document.querySelector('#btn-upload-file');
   const calcAvgButton = document.querySelector('#btn-calc-avg');
-  
+  const beginButton = document.querySelector('#btn-begin');
   const dataAvgNumber = document.querySelector('#show-data-avg');
+
   // const deleteButton = document.querySelector('.btn-delete');
   // const clickNbr = document.querySelector('#click-nbr');
   const dataAPIURL = 'http://localhost:3000/api/data';
-  const keysAPIURL = 'http://localhost:3000/api/keys';
 
   function ready(fn) {
     if (typeof fn !== 'function') {
@@ -39,14 +39,15 @@
     dataAvgNumber.innerHTML = studentDataObj.clicks;
   }
 
-  ready(ajaxRequest('GET', dataAPIURL, updateDataAvg));
+  function sendCSVToDatabase() {
+    dataAvgNumber.innerHTML = 'successfully input csv into database';
+    document.window.alert('successfully input csv into database');
+  }
 
 
-  uploadFileButton.addEventListener('click', () => {    
-    ajaxRequest('POST', dataAPIURL, () => {
-      ajaxRequest('GET', dataAPIURL, updateDataAvg);
-    });
-  }, false); //what is this false?
+  // *** WARNING ABOUT THIS CODE ONE LINE BELOW! ****
+  ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); //TODO: This might cause a problem bc the url is hardcoded...
+  ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase)); 
 
   calcAvgButton.addEventListener('click', () => {
     const xKey = 'G3'; // TODO: load the XKey from the searchbar1
@@ -54,16 +55,22 @@
 
     ajaxRequest('GET', `${dataAPIURL}/${xKey}/${yKey}`, updateDataAvg);
   });
-        
-  $('.ui.search')
-    .search({
-      source: content,
-    });
-});
+
+  beginButton.addEventListener('click', () => {
+    dataAvgNumber.innerHTML = 'did it work?';
+    ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase);
+  });
+}
+// SEARCH UI!
+//   $('.ui.search')
+//     .search({
+//       source: content,
+//     });
+// });
 
 /* front-end plan
 
-1. Button to upload the data file
+1. Button to upload the data file [IF WE HAVE TIME, OTHERWISE KEEP IT IN PROJECT]
 2. AJAX request to put data file from csv to mongo.
 3. Populate search bar keys with data from the csv, now json (the keys!)
 4. When search is pressed, perform an AJAX request to get the avgXForY(searchBar1Key, searchBar2Key).

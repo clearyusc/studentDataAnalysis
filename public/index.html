@@ -27,34 +27,36 @@
         </div>
         
         <br />
-
-        <label class="btn btn-primary" for="my-file-selector">
-            <input id="my-file-selector" type="file" style="display:none" 
-            onchange="$('#upload-file-info').html(this.files[0].name)">
-            Choose Data File
-            </label>
-        <span class='label label-info' id="upload-file-info"></span>
+        <!-- 
+        <form id="uploadFileForm"
+         enctype="multipart/form-data"
+         action="/api/photo"
+         method="post">
+            <input type="file" name="userPhoto" />
+            <input type="submit" value="Upload Image" name="submit">
+            <span id = "uploadStatus"></span>
+        </form>
         <br />
         <button class="btn btn-success" id="btn-upload-file">Upload File</button>
-
+        -->
         <br />
         <br />
         <div class="btn-container">            
-            <button type="submit" class="btn btn-add">CLICK ME!</button>
+            <button type="submit" class="btn" id="btn-begin">Begin!</button>
             <button class="btn btn-delete">RESET</button>
         </div>
         <br />
         <br />
-        <span id="show-data-avg"></span>
+        <span id="show-data-avg">TEMP TEXT!!!!</span>
 
         <br />
         <br />
-        <button class="btn btn-warning" id="btn-calc-avg">Upload File</button>
+        <button class="btn btn-warning" id="btn-calc-avg">Calculate Average ___ for ___</button>
 
     </div>
 
-    <script type="text/javascript" src="/controllers/clickController.client.js"></script>
-    <script type="text/javascript" src="/controllers/dataController.client.js"></script>
+    <script type="text/javascript" src="/app/controllers/clickController.client.js"></script>
+    <script type="text/javascript" src="/app/controllers/dataController.client.js"></script>
 </body>
 
 </html>
