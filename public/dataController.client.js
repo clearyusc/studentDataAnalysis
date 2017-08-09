@@ -2,7 +2,8 @@
   const calcAvgButton = document.querySelector('#btn-calc-avg');
   const beginButton = document.querySelector('#btn-begin');
   const dataAvgNumber = document.querySelector('#show-data-avg');
-  
+
+  dataAvgNumber.innerHTML = 'v1.0';
   // // const deleteButton = document.querySelector('.btn-delete');
   // const clickNbr = document.querySelector('#click-nbr');
   const dataAPIURL = 'http://localhost:3000/api/data';
@@ -59,7 +60,7 @@
     dataAvgNumber.innerHTML = 'did it work?';
     ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase);
   });
-});
+})();
 // SEARCH UI!
 //   $('.ui.search')
 //     .search({
