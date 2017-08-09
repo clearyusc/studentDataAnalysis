@@ -21,50 +21,75 @@ const csvConverter = {
     const studentData = db.collection('studentData');
     const sdProjection = { _id: false };
 
-    // All we need to do is INSERT for now
-    studentData.findOne({}, sdProjection, (err, result) => {
-      if (err) {
-        callback(err);
+
+    if (arrayOfJSONs.length <= 0) {
+      callback(new Error('Tried to insert an empty array into the database. CSV file read error or emtpy CSV file.'));
+    }
+    studentData.insertMany(arrayOfJSONs, (err2) => {
+      arrayOfJSONs.forEach((obj) => {
+        console.log(obj['_id']);
+      });
+      console.log('#a');
+      if (err2) {
+        console.log('#b, err= ',err2);
+        callback(err2);
+        return;
       }
 
-      if (result) {
-        // We want to start with fresh data each time we load this program.
-        
-        // studentData.bulkWrite(
-        //   [
-        //     {
-        //       deleteMany: {},
-        //     },
-        //     {
-        //       insertMany: 
-        //     }
-        //   ]
-        // )
-        
-        try {
-          db.studentData.deleteMany({});
-        } catch (e) {
-          callback(e);
+      studentData.find({}, sdProjection).toArray((err3, studentDataResults) => {
+        console.log('#c');
+        if (err3) {
+          callback(err3);
+          return;
         }
-      }
-      if (arrayOfJSONs.length <= 0) {
-        callback(new Error('Tried to insert an empty array into the database. CSV file read error or emtpy CSV file.'));
-      }
-
-      studentData.insertMany(arrayOfJSONs, (err2) => {
-        if (err2) {
-          callback(err2);
-        }
-
-        studentData.find({}, sdProjection).toArray((err3, studentDataResults) => {
-          if (err3) {
-            callback(err3);
-          }
-          //console.log(`Found the following student docs: ${JSON.stringify(studentDataResults, null, 2)}`);
-          callback(); // successfully callback
-        });
+        console.log(`Found the following student docs: ${JSON.stringify(studentDataResults, null, 2)}`);
+        callback(); // successfully callback
       });
     });
+
+    // All we need to do is INSERT for now
+    // studentData.findOne({}, sdProjection, (err, result) => {
+    //   if (err) {
+    //     callback(err);
+    //   }
+
+    //   if (result) {
+    //     // We want to start with fresh data each time we load this program.
+
+    //     // studentData.bulkWrite(
+    //     //   [
+    //     //     {
+    //     //       deleteMany: {},
+    //     //     },
+    //     //     {
+    //     //       insertMany: 
+    //     //     }
+    //     //   ]
+    //     // )
+
+    //     try {
+    //       db.studentData.deleteMany({});
+    //     } catch (e) {
+    //       callback(e);
+    //     }
+    //   }
+    //   if (arrayOfJSONs.length <= 0) {
+    //     callback(new Error('Tried to insert an empty array into the database. CSV file read error or emtpy CSV file.'));
+    //   }
+    //   studentData.insertMany(arrayOfJSONs, (err2) => {
+    //     if (err2) {
+    //       callback(err2);
+    //     }
+
+    //     studentData.find({}, sdProjection).toArray((err3, studentDataResults) => {
+    //       if (err3) {
+    //         callback(err3);
+    //       }
+    //       //console.log(`Found the following student docs: ${JSON.stringify(studentDataResults, null, 2)}`);
+    //       callback(); // successfully callback
+    //     });
+    //   });
+    // });
 
     // callback(); // THIS IS THE WRONG CODE. THIS IS AHHHH!! ITS SYNCHRONOUS!
   },

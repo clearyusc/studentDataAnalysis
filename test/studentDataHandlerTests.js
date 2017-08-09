@@ -74,17 +74,21 @@ describe('hooks', () => {
         });
       });
 
-      it('JSON data should be correctly written to database.', (done) => {
+      it.only('JSON data should be correctly written to database.', (done) => {
         const db = DB.getDB();
         csvConverter.writeJSONsToDB(db, fixtures, (err1) => {
+          console.log('#1');
           if (err1) done(err1);
           else {
+            console.log('#2');
             db.collection('studentData').find({}).toArray((err2, results) => {
               if (err2) {
                 done(err2);
                 return;
               }
-              assert.deepEqual(results, fixtures);
+              console.log('#3');
+              assert.equal(results, fixtures);
+              console.log('#4');
               done();
             });
           }
