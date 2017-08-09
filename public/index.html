@@ -14,7 +14,7 @@
 
 <body>
     <div class="container">
-        <img src="/public/img/clementine_150.png" />
+        <br />
         <br />
         <p class="clementine-text">Student Data Analysis</p>
     </div>
@@ -51,38 +51,66 @@
         <br />
         <br />
         <span id="show-data-avg">TEMP TEXT!!!!</span>
-
-        <input id="myinput" class="awesomplete dropdown-input"/>
-        <button class='dropdown-btn'>options</button>
         <br />
         <br />
-        <button class="btn btn-warning" id="btn-calc-avg">Calculate Average ___ for ___</button>
-
+        <p style="float: left; margin-right: 20px">What is the average...</p>
+        <input id="searchX" class="awesomplete dropdown-input"/>
+        <button class='dropdown-btn-x'>Options</button>
+        <br />
+        <br />
+        <p style="float: left; margin-right: 20px">given ....</p>
+        <input id="searchY" class="awesomplete dropdown-input"/>
+        <button class='dropdown-btn-y'>Options</button>
+        <br />
+        <br />
+        <button class="btn btn-warning" id="btn-calc-avg">Calculate Average</button>
     </div>    
     <script type="text/javascript" src="public/dataController.client.js"></script>
     <script src="/public/js/awesomplete.js"></script>
     <script>
-        var input = document.getElementById("myinput");
         var keys = ['school', 'sex', 'age', 'address', 'famsize', 'Pstatus', 'Medu', 'Fedu',
   'Mjob', 'Fjob', 'reason', 'guardian', 'traveltime', 'studytime', 'failures', 'schoolsup', 'famsup',
   'paid', 'activities', 'nursery', 'higher', 'internet', 'romantic', 'famrel', 'freetime', 'goout',
   'Dalc', 'Walc', 'health', 'absences', 'G1', 'G2', 'G3'];
-        var comboplete = new Awesomplete(input, {
+
+        var inputX = document.getElementById("searchX");        
+        var combopleteX = new Awesomplete(inputX, {
             //TODO: Don't hardcode this.
             list: keys,
             minChars: 0,
             maxItems: keys.length,
         });
-        Awesomplete.$('.dropdown-btn').addEventListener("click", function() {
-            if (comboplete.ul.childNodes.length === 0) {
-                comboplete.minChars = 0;
-                comboplete.evaluate();
+        Awesomplete.$('.dropdown-btn-x').addEventListener("click", function() {
+            if (combopleteX.ul.childNodes.length === 0) {
+                combopleteX.minChars = 0;
+                combopleteX.evaluate();
             }
-            else if (comboplete.ul.hasAttribute('hidden')) {
-                comboplete.open();
+            else if (combopleteX.ul.hasAttribute('hidden')) {
+                combopleteX.open();
             }
             else {
-                comboplete.close();
+                combopleteX.close();
+            }
+        });
+
+        var inputY = document.getElementById("searchY");        
+        var combopleteY = new Awesomplete(inputY, {
+            //TODO: Don't hardcode this.
+            //TODO: Make sure they don't enter the same key for both searches
+            list: keys,
+            minChars: 0,
+            maxItems: keys.length,
+        });
+        Awesomplete.$('.dropdown-btn-y').addEventListener("click", function() {
+            if (combopleteY.ul.childNodes.length === 0) {
+                combopleteY.minChars = 0;
+                combopleteY.evaluate();
+            }
+            else if (combopleteY.ul.hasAttribute('hidden')) {
+                combopleteY.open();
+            }
+            else {
+                combopleteY.close();
             }
         });
     </script>
