@@ -74,7 +74,7 @@ describe('hooks', () => {
         });
       });
 
-      it.only('JSON data should be correctly written to database.', (done) => {
+      it('JSON data should be correctly written to database.', (done) => {
         const db = DB.getDB();
         csvConverter.writeJSONsToDB(db, fixtures, (err1) => {
           console.log('#1');

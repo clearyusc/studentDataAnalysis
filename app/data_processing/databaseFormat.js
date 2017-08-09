@@ -7,28 +7,24 @@
 We just need to check to see if we need to conver them to Numbers. */
 
 
-const formatNumberTable = [{ 'G3': new Number() }];
+// the value just needs to not be 'null'
+const formatNumberTable = [{ 'age': 1, 'Medu': 1, 'Fedu': 1, 
+  'traveltime': 1, 'studytime': 1, 'failures': 1, 'famrel': 1, 'freetime': 1, 
+  'goout': 1, 'Dalc': 1, 'Walc': 1, 'health': 1, 'absences': 1, 'G1': 1, 'G2': 1, 'G3': 1 }];
 const dbFormatter = {
-  format: (key, object) => {
+  format: (key, value) => {
     //let formattedValue = null;
-
+    var formattedValue = null;
+    // TODO: perhaps remove this double check
     if (formatNumberTable[key] != null) {
-      object[key] = parseInt(object[key], 10); // radix 10 (decimal)
+      formattedValue = parseInt(value, 10); // radix 10 (decimal)
     } 
-    return object;
+    return formattedValue;
+  },
 
-
-    // const correctDataType = typeof formatTable[key];
-    // if (typeof value !== correctDataType) {
-    // // need to format
-    //   if (typeof correctDataType === 'number') {
-    //     formattedValue = parseInt(value, 10); // radix 10 (decimal)
-    //   } else {
-    //     console.log('HUGE DATA PROBLEM');
-    //   }
-    //   return formattedValue;
-    // }
-    // dont need to format, correct already
+  // we don't want to waste time formatting keys we don't need to format
+  keysToFormat: () => {
+    return Object.keys(formatNumberTable);
   },
 };
 module.exports = dbFormatter;

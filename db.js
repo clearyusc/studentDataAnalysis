@@ -1,5 +1,8 @@
 const async = require('async');
 const MongoClient = require('mongodb').MongoClient;
+
+const dbFormatter = require(`${process.cwd()}/app/data_processing/databaseFormat.js`);
+
 // Much credit for mongodb testing is due to this tutorial: https://www.terlici.com/2014/09/15/node-testing.html
 // TO-DO: refactor this code so it is more similar to my style (return single object for export w/ multi functions)
 
@@ -38,7 +41,7 @@ exports.getDB = () => state.db;
 exports.drop = (done) => {
   if (!state.db) return done();
   // This is faster then dropping the database
-  //state.db.collection('studentData').remove({});
+  // state.db.collection('studentData').remove({});
   state.db.collections((err, collections) => {
     async.each(collections, (collection, cb) => {
       if (collection.collectionName.indexOf('system') === 0) {
@@ -59,6 +62,14 @@ exports.fixtures = (arrayOfJSONs, done) => {
   db.createCollection('studentData', (err) => {
     if (err) return done(err);
     const studentData = db.collection('studentData');
+    // TODO: NEED TO FORMAT THE DATA THAT WE ARE TESTING AGAINST:
+    arrayOfJSONs.forEach((obj) => {
+      dbFormatter.keysToFormat().forEach((key) => {
+        obj[key] = dbFormatter.format(key, obj[key]);
+      });
+      // arrayOfJSONs.push(jsonObj);
+    });
+
     try {
       studentData.insertMany(arrayOfJSONs);
     } catch (e) {

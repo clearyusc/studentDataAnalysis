@@ -11,7 +11,11 @@ const csvConverter = {
         // const typeFormmattedObj = JSON.parse(JSON.stringify(jsonObj));
         // typeFormmattedObj['G3'] = parseInt(typeFormmattedObj['G3'], 10); // radix 10
         // arrayOfJSONs.push(typeFormmattedObj);
-        arrayOfJSONs.push(dbFormatter.format('G3', jsonObj));
+        //TODO: Expand to formatting all of the necessary ones
+        dbFormatter.keysToFormat().forEach((key)=>{
+          jsonObj[key] = dbFormatter.format(key, jsonObj[key]);
+        });
+        arrayOfJSONs.push(jsonObj);
         // combine csv header row and csv line to a json object 
         // jsonObj.a ==> 1 or 4 
       })

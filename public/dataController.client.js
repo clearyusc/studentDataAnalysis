@@ -1,4 +1,7 @@
 (function () {
+  // const mathRound = require(`${process.cwd()}/app/data_processing/mathRound.js`);
+  const numRoundDecimalPlaces = 3; // e.g. 12.125
+
   const calcAvgButton = document.querySelector('#btn-calc-avg');
   const beginButton = document.querySelector('#btn-begin');
   const dataAvgNumber = document.querySelector('#show-data-avg');
@@ -31,10 +34,46 @@
     xmlhttp.send();
   }
 
+  function mathRound(number, precision) {
+    const factor = Math.pow(10, precision);
+    const tempNumber = number * factor;
+    const roundedTempNumber = Math.round(tempNumber);
+    return roundedTempNumber / factor;
+  }
+
+  function displayJSON(data) {
+    const strings = [];
+    data.forEach((obj, i) => {
+      if (obj._id != null) {
+        if (typeof obj.avgXValue !== 'number') {
+          strings.push(`${obj._id}: ${obj.avgXValue} `);
+        } else {
+          strings.push(`${obj._id}: ${mathRound(obj.avgXValue, numRoundDecimalPlaces)} `);
+        }
+      }
+    });
+    return strings;
+  }
+  // function displayJSON(data) {
+  //   let strings = [];
+  //   data.forEach((obj, i) => {
+  //     if (obj._id != null) {
+  //       strings[i] = `${obj._id}:`;
+  //       if (typeof obj.avgXValue === 'number') {
+  //         const num = mathRound(obj.avgXValue, numRoundDecimalPlaces);
+  //         strings[i] = strings[i].concat(`${num}`);
+  //       } else {
+  //         strings[i] = strings[i].concat(`${obj.avgXValue}`);
+  //       }
+  //     }
+  //   });
+  //   return strings;
+  // }
+
   function updateDataAvg(data) {
     const studentDataObj = JSON.parse(data);
-    dataAvgNumber.innerHTML = JSON.stringify(data);
-    //dataAvgNumber.innerHTML = studentDataObj.avgXValue;
+    dataAvgNumber.innerHTML = displayJSON(studentDataObj);
+    // dataAvgNumber.innerHTML = studentDataObj.avgXValue;
   }
 
   function sendCSVToDatabase(response) {
@@ -43,10 +82,10 @@
 
 
   // *** the ready function simply loads something on PAGE LOAD ***
-  //ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
+  // ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
 
   calcAvgButton.addEventListener('click', () => {
-    //ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); // TODO: This might cause a problem bc the url is hardcoded...
+    // ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); // TODO: This might cause a problem bc the url is hardcoded...
     const xKey = 'G3'; // TODO: load the XKey from the searchbar1
     const yKey = 'sex'; // TODO: load the yKey from the searchbar2
 
@@ -57,7 +96,7 @@
     dataAvgNumber.innerHTML = 'begin button pressed... waiting for AJAX response';
     ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase);
   });
-})();
+}());
 
 // SEARCH UI!
 //   $('.ui.search')
