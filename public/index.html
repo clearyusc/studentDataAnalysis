@@ -5,11 +5,11 @@
 <head>
     <title>Student Data Analysis</title>
     <link href="http://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet" type="text/css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>    
-    
-    <!--<script type="text/javascript" src="/app/controllers/clickController.client.js"></script>-->
-    
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     -->
+
+
     <link href="/public/css/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/public/css/awesomplete.css" />
 </head>
 
 <body>
@@ -52,12 +52,40 @@
         <br />
         <span id="show-data-avg">TEMP TEXT!!!!</span>
 
+        <input id="myinput" class="awesomplete dropdown-input"/>
+        <button class='dropdown-btn'>options</button>
         <br />
         <br />
         <button class="btn btn-warning" id="btn-calc-avg">Calculate Average ___ for ___</button>
 
     </div>    
     <script type="text/javascript" src="public/dataController.client.js"></script>
+    <script src="/public/js/awesomplete.js"></script>
+    <script>
+        var input = document.getElementById("myinput");
+        var keys = ['school', 'sex', 'age', 'address', 'famsize', 'Pstatus', 'Medu', 'Fedu',
+  'Mjob', 'Fjob', 'reason', 'guardian', 'traveltime', 'studytime', 'failures', 'schoolsup', 'famsup',
+  'paid', 'activities', 'nursery', 'higher', 'internet', 'romantic', 'famrel', 'freetime', 'goout',
+  'Dalc', 'Walc', 'health', 'absences', 'G1', 'G2', 'G3'];
+        var comboplete = new Awesomplete(input, {
+            //TODO: Don't hardcode this.
+            list: keys,
+            minChars: 0,
+            maxItems: keys.length,
+        });
+        Awesomplete.$('.dropdown-btn').addEventListener("click", function() {
+            if (comboplete.ul.childNodes.length === 0) {
+                comboplete.minChars = 0;
+                comboplete.evaluate();
+            }
+            else if (comboplete.ul.hasAttribute('hidden')) {
+                comboplete.open();
+            }
+            else {
+                comboplete.close();
+            }
+        });
+    </script>
 </body>
 </html>
 

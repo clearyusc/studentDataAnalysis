@@ -1,12 +1,16 @@
 (function () {
   // const mathRound = require(`${process.cwd()}/app/data_processing/mathRound.js`);
   const numRoundDecimalPlaces = 3; // e.g. 12.125
-
   const calcAvgButton = document.querySelector('#btn-calc-avg');
   const beginButton = document.querySelector('#btn-begin');
   const dataAvgNumber = document.querySelector('#show-data-avg');
   const dataAPIURL = 'http://localhost:3000/api/data';
   dataAvgNumber.innerHTML = 'v1.0';
+
+  // let input = document.getElementById('myinput');
+  // new Awesomplete(input, {
+  //   list: ['Ada', 'Java', 'JavaScript', 'LOLCODE', 'Node.js', 'Ruby on Rails'],
+  // });
 
   function ready(fn) {
     if (typeof fn !== 'function') {
