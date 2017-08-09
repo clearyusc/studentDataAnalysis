@@ -1,4 +1,5 @@
 const csv = require('csvtojson');
+const dbFormatter = require(`${process.cwd()}/app/data_processing/databaseFormat.js`);
 
 const csvConverter = {
   csvToJSON: (filepath, arrayOfJSONs, callback) => {
@@ -7,7 +8,10 @@ const csvConverter = {
     })
       .fromFile(filepath)
       .on('json', (jsonObj) => {
-        arrayOfJSONs.push(jsonObj);
+        // const typeFormmattedObj = JSON.parse(JSON.stringify(jsonObj));
+        // typeFormmattedObj['G3'] = parseInt(typeFormmattedObj['G3'], 10); // radix 10
+        // arrayOfJSONs.push(typeFormmattedObj);
+        arrayOfJSONs.push(dbFormatter.format('G3', jsonObj));
         // combine csv header row and csv line to a json object 
         // jsonObj.a ==> 1 or 4 
       })

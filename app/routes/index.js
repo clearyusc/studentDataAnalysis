@@ -6,16 +6,20 @@ module.exports = (app, db) => {
   // const clickHandler = new ClickHandler(db);
 
   app.route('/')
-    .get((req, res) => {
-      return res.sendFile(`${process.cwd()}/public/index.html`);
-    });
+    .get((req, res) => res.sendFile(`${process.cwd()}/public/index.html`));
 
   app.route('/api/data/:x/:y')
     .get((req, res) => {
       const dbColl = db.collection('studentData');
+      console.log(`ZERO: xParam = ${req.params.x}, yParam = ${req.params.y}`);
       processData.avgXForY(req.params.x, req.params.y, dbColl, (err, results) => {
-        // if (err) done(err); //error handling!
+        console.log('ALPHA= ',JSON.stringify(results));
+        if (err) {
+          // 500 = Internal Server Error
+          return res.status(500).send(err);
+        }
         return res.send(results);
+
         // done(); //how do we handle this here?!
       });
     });
@@ -31,10 +35,9 @@ module.exports = (app, db) => {
           console.log('#2 being called?');
           return res.status(404).send(err);
           // res.send('Error! Problem parsing csv and storing it on the database:', err);
-        } else {
-          console.log('#3 being called?');
-          return res.send('Successfully stored the csv on the database!');
         }
+        console.log('#3 being called?');
+        return res.send('Successfully stored the csv on the database!');
       });
     });
 

@@ -20,7 +20,8 @@ const processData = {
   avgXForY: (xKey, yKey, dbCollection, done) => {
     const queryXKey = `$${xKey}`;
     const queryYKey = `$${yKey}`;
-
+    console.log('94: x= ',xKey);
+    console.log('94: y= ',yKey);
     dbCollection.aggregate([
       {
         $group: {
@@ -31,7 +32,8 @@ const processData = {
         },
       },
     ]).toArray((err, results) => {
-      if (err) done(err);
+      console.log('95: ', JSON.stringify(results));
+      if (err) done(err, null);
       done(null, results); // 'null' because there is no error
     });
   },

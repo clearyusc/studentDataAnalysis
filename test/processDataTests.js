@@ -20,7 +20,7 @@ function prepareTestDatabase() {
 describe('Process Data - test suite', () => {
   prepareTestDatabase();
 
-  it('Should correctly calculate the average X for some Y', (done) => {
+  it.only('Should correctly calculate the average X for some Y', (done) => {
     const db = DB.getDB();
     const studentData = db.collection('studentData');
 

@@ -33,7 +33,8 @@
 
   function updateDataAvg(data) {
     const studentDataObj = JSON.parse(data);
-    dataAvgNumber.innerHTML = studentDataObj.clicks;
+    dataAvgNumber.innerHTML = JSON.stringify(data);
+    //dataAvgNumber.innerHTML = studentDataObj.avgXValue;
   }
 
   function sendCSVToDatabase(response) {
