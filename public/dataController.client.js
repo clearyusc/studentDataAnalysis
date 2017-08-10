@@ -2,8 +2,15 @@
   // const mathRound = require(`${process.cwd()}/app/data_processing/mathRound.js`);
   const numRoundDecimalPlaces = 3; // e.g. 12.125
   const calcAvgButton = document.querySelector('#btn-calc-avg');
+  const graphButton = document.querySelector('#btn-make-graph');
+
   const beginButton = document.querySelector('#btn-begin');
-  const dataAvgNumber = document.querySelector('#show-data-avg');
+  const resetButton = document.querySelector('#btn-reset-data');
+
+  const xSearchBar = document.querySelector('#searchX');
+  const ySearchBar = document.querySelector('#searchY');
+
+  const dataAvgNumber = document.querySelector('#show-data-avg'); 
   const dataAPIURL = 'http://localhost:3000/api/data';
   dataAvgNumber.innerHTML = 'v1.0';
 
@@ -56,6 +63,17 @@
         }
       }
     });
+
+    // TODO: figure out why this doesn't do anything...
+    // Sort the data just to make it more visually appealing
+    strings.sort((a, b) => {
+      const keyA = parseInt(a['_id'], 10); // decimal (10)
+      const keyB = parseInt(b['_id'], 10); // decimal (10)
+      if (keyA < keyB) return -1;
+      if (keyA > keyB) return 1;
+      return 0;
+    });
+
     return strings;
   }
   // function displayJSON(data) {
@@ -84,14 +102,23 @@
     dataAvgNumber.innerHTML = `${response}`;
   }
 
+  function resetDatabase(response) {
+    dataAvgNumber.innerHTML = `${response}`;  
+  }
+
+  function updateGraphData(data) {
+    const graphDataObj = JSON.parse(data);
+    dataAvgNumber.innerHTML = JSON.stringify(graphDataObj);
+  }
+
 
   // *** the ready function simply loads something on PAGE LOAD ***
   // ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
-  
+
   calcAvgButton.addEventListener('click', () => {
     // ready(ajaxRequest('GET', dataAPIURL, updateDataAvg)); // TODO: This might cause a problem bc the url is hardcoded...
-    const xKey = document.querySelector('#searchX').value;
-    const yKey = document.querySelector('#searchY').value;
+    const xKey = xSearchBar.value;
+    const yKey = ySearchBar.value;
     // const xKey = 'G3'; // TODO: load the XKey from the searchbar1
     // const yKey = 'sex'; // TODO: load the yKey from the searchbar2
 
@@ -101,6 +128,18 @@
   beginButton.addEventListener('click', () => {
     dataAvgNumber.innerHTML = 'begin button pressed... waiting for AJAX response';
     ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase);
+  });
+
+  resetButton.addEventListener('click', () => {
+    dataAvgNumber.innerHTML = 'Reseting database now... waiting for AJAX response';
+    ajaxRequest('GET', `${dataAPIURL}/reset`, resetDatabase);
+  });
+
+  graphButton.addEventListener('click', () => {
+    const xKey = xSearchBar.value;
+    const yKey = ySearchBar.value;
+
+    ajaxRequest('GET', `${dataAPIURL}/graph/${xKey}/${yKey}`, updateGraphData);
   });
 }());
 

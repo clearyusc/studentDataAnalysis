@@ -28,6 +28,7 @@
     "async": "^2.5.0",
     "awesomplete": "^1.1.2",
     "bson": "^1.0.4",
+    "chart.js": "^2.6.0",
     "csv-parse": "^1.2.1",
     "csvtojson": "^1.1.7",
     "express": "^4.13.3",

@@ -13,31 +13,51 @@ module.exports = (app, db) => {
       const dbColl = db.collection('studentData');
       console.log(`ZERO: xParam = ${req.params.x}, yParam = ${req.params.y}`);
       processData.avgXForY(req.params.x, req.params.y, dbColl, (err, results) => {
-        console.log('ALPHA= ',JSON.stringify(results));
+        console.log('ALPHA= ', JSON.stringify(results));
         if (err) {
           // 500 = Internal Server Error
           return res.status(500).send(err);
         }
         return res.send(results);
-
-        // done(); //how do we handle this here?!
       });
     });
 
-  app.route('/api/data/csvtomongo')
+  app.route('/api/data/graph/:x/:y')
     .get((req, res) => {
-      console.log('HOW MANY TIMES IS THIS BEING CALLED12345?');
-      const filepath = `${process.cwd()}/test/student-mat.csv`;
-      csvConverter.csvToMongoDB(filepath, db, (err) => {
-        console.log('#1 being called?');
+      const dbColl = db.collection('studentData');
+      processData.compareXAndY(req.params.x, req.params.y, dbColl, (err, results) => {
         if (err) {
           // 500 = Internal Server Error
-          console.log('#2 being called?');
+          return res.status(500).send(err);
+        }
+        return res.send(results);
+      });
+    });
+
+
+  app.route('/api/data/csvtomongo')
+    .get((req, res) => {
+      const filepath = `${process.cwd()}/test/student-mat.csv`;
+      csvConverter.csvToMongoDB(filepath, db, (err) => {
+        if (err) {
+          // 500 = Internal Server Error
           return res.status(404).send(err);
           // res.send('Error! Problem parsing csv and storing it on the database:', err);
         }
-        console.log('#3 being called?');
         return res.send('Successfully stored the csv on the database!');
+      });
+    });
+
+
+  app.route('/api/data/reset')
+    .get((req, res) => {
+      db.collection('studentData').drop((err) => {
+        if (err) {
+          // 500 = Internal Server Error
+          return res.status(404).send(err);
+          // res.send('Error! Problem parsing csv and storing it on the database:', err);
+        }
+        return res.send('Successfully reset the database!');
       });
     });
 

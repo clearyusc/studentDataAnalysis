@@ -20,8 +20,6 @@ const processData = {
   avgXForY: (xKey, yKey, dbCollection, done) => {
     const queryXKey = `$${xKey}`;
     const queryYKey = `$${yKey}`;
-    console.log('94: x= ',xKey);
-    console.log('94: y= ',yKey);
     dbCollection.aggregate([
       {
         $group: {
@@ -32,7 +30,7 @@ const processData = {
         },
       },
     ]).toArray((err, results) => {
-      console.log('95: ', JSON.stringify(results));
+      console.log('axgXForY: DIZZZ IZ HOW MANY= ', results.length);
       if (err) done(err, null);
       done(null, results); // 'null' because there is no error
     });
@@ -47,15 +45,34 @@ const processData = {
     const sortQuery = {};
     sortQuery[xKey] = 1;
 
+    console.log('projQuery = ', JSON.stringify(projectQuery));
+    console.log('sortQuery = ', JSON.stringify(sortQuery));
+    // dbCollection.aggregate([
+    //   {
+    //     $project: { _id: 1, G3: 1, failures: 1 }
+    //   },
+    //   {
+    //     $sort: { G3: 1 }
+    //   },
+    // ]).toArray((err, results) => {
+    //   if (err) done(err, null);
+
+    //   done(null, results); // 'null' because there is no error
+    // });
     dbCollection.aggregate([
-      {
-        $project: projectQuery,
-      },
       {
         $sort: sortQuery,
       },
+      {
+        $project: projectQuery,
+      },
     ]).toArray((err, results) => {
       if (err) done(err, null);
+    console.log('compareXAndY: DIZZZ IZ HOW MANY= ', results.length);      // results.forEach((result, index) => {
+      //   if (Object.keys(result).includes(xKey) === false) {
+      //     results.splice(index, 1);
+      //   }
+      //console.log(`DEEEZ= ${JSON.stringify(result, null, 3)}`);
 
       done(null, results); // 'null' because there is no error
     });
