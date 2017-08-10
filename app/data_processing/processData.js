@@ -30,8 +30,8 @@ const processData = {
         },
       },
     ]).toArray((err, results) => {
-      console.log('queryXKey = ',queryXKey);
-      console.log('queryYKey = ',queryYKey);
+      console.log('queryXKey = ', queryXKey);
+      console.log('queryYKey = ', queryYKey);
       console.log('axgXForY: DIZZZ IZ HOW MANY= ', results.length);
       if (err) done(err, null);
       done(null, results); // 'null' because there is no error
@@ -39,28 +39,19 @@ const processData = {
   },
 
   // e.g. Generate data points for a graph of travel time to overall grade
-  compareXAndY: (xKey, yKey, dbCollection, done) => {
-    const projectQuery = { _id: `${xKey} vs. ${yKey}` };
-    projectQuery[xKey] = true;
-    projectQuery[yKey] = true;
+  compareXAndY: (xKey, yKey, dbCollection, done) => {    
+
+    const projectQuery = {
+      _id: `${xKey} vs. ${yKey}`,
+      x: xKey,
+      y: yKey,
+    };
 
     const sortQuery = {};
     sortQuery[xKey] = 1;
 
-    console.log('projQuery = ', JSON.stringify(projectQuery));
-    console.log('sortQuery = ', JSON.stringify(sortQuery));
-    // dbCollection.aggregate([
-    //   {
-    //     $project: { _id: 1, G3: 1, failures: 1 }
-    //   },
-    //   {
-    //     $sort: { G3: 1 }
-    //   },
-    // ]).toArray((err, results) => {
-    //   if (err) done(err, null);
-
-    //   done(null, results); // 'null' because there is no error
-    // });
+    // console.log('projQuery = ', JSON.stringify(projectQuery));
+    // console.log('sortQuery = ', JSON.stringify(sortQuery));
     dbCollection.aggregate([
       {
         $sort: sortQuery,
@@ -70,11 +61,10 @@ const processData = {
       },
     ]).toArray((err, results) => {
       if (err) done(err, null);
-    console.log('compareXAndY: DIZZZ IZ HOW MANY= ', results.length);      // results.forEach((result, index) => {
       //   if (Object.keys(result).includes(xKey) === false) {
       //     results.splice(index, 1);
       //   }
-      //console.log(`DEEEZ= ${JSON.stringify(result, null, 3)}`);
+      console.log(`DEEEZ= ${JSON.stringify(results, null, 3)}`);
 
       done(null, results); // 'null' because there is no error
     });

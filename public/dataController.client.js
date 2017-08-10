@@ -1,5 +1,6 @@
 (function () {
-  // const mathRound = require(`${process.cwd()}/app/data_processing/mathRound.js`);
+  // <script src='/public/graphController.client.js'></script>
+  // const graphController = require(`${process.cwd()}/public/graphController.client.js`);
   const numRoundDecimalPlaces = 3; // e.g. 12.125
   const calcAvgButton = document.querySelector('#btn-calc-avg');
   const graphButton = document.querySelector('#btn-make-graph');
@@ -10,7 +11,8 @@
   const xSearchBar = document.querySelector('#searchX');
   const ySearchBar = document.querySelector('#searchY');
 
-  const dataAvgNumber = document.querySelector('#show-data-avg'); 
+  const dataAvgNumber = document.querySelector('#show-data-avg');
+  const dataLegend = document.querySelector('#data-legend');
   const dataAPIURL = 'http://localhost:3000/api/data';
   dataAvgNumber.innerHTML = 'v1.0';
 
@@ -67,8 +69,8 @@
     // TODO: figure out why this doesn't do anything...
     // Sort the data just to make it more visually appealing
     strings.sort((a, b) => {
-      const keyA = parseInt(a['_id'], 10); // decimal (10)
-      const keyB = parseInt(b['_id'], 10); // decimal (10)
+      const keyA = parseInt(a._id, 10); // decimal (10)
+      const keyB = parseInt(b._id, 10); // decimal (10)
       if (keyA < keyB) return -1;
       if (keyA > keyB) return 1;
       return 0;
@@ -103,12 +105,19 @@
   }
 
   function resetDatabase(response) {
-    dataAvgNumber.innerHTML = `${response}`;  
+    dataAvgNumber.innerHTML = `${response}`;
   }
 
   function updateGraphData(data) {
     const graphDataObj = JSON.parse(data);
     dataAvgNumber.innerHTML = JSON.stringify(graphDataObj);
+    // TODO: figure out how to distinguish x and y values
+    const xValues = [];
+    const yValues = [];
+    graphDataObj.forEach((obj) => {
+      //xValues.push(Object.keys(obj)[0])
+    });
+    createGraph();
   }
 
 
@@ -141,6 +150,51 @@
 
     ajaxRequest('GET', `${dataAPIURL}/graph/${xKey}/${yKey}`, updateGraphData);
   });
+
+
+  // need to source js 
+  // var myChart = new Chart(ctx, {...});
+  const ctx = document.querySelector('#myGraph');
+  function createGraph(yValues, xValues, graphLabel) {
+    const myGraph = new Chart(ctx, {
+      type: 'bar', // change to line
+      data: {
+      // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: xValues,
+        datasets: [{
+          label: graphLabel,
+          // data: [12, 19, 3, 5, 2, 3],
+          data: yValues,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+          ],
+          borderWidth: 1,
+        }],
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+            },
+          }],
+        },
+      },
+    });
+  }
 }());
 
 // SEARCH UI!
