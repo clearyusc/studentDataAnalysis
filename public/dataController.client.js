@@ -196,7 +196,8 @@
       xValues.push(obj['_id']);
       yValues.push(obj['avgXValue']); //don't be confused - this is not a typo!
     });
-    createGraph(xValues, yValues, '');
+    // TODO: update this way of inputting the label:
+    createGraph(xValues, yValues, `${xSearchBar.value} vs. ${ySearchBar.value}`);
   }
 
   graphButton.addEventListener('click', () => {
