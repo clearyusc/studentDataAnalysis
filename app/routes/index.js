@@ -27,7 +27,7 @@ module.exports = (app, db) => {
     .get((req, res) => {
       const dbColl = db.collection('studentData');
       // processData.compareXAndY(req.params.x, req.params.y, dbColl, (err, results) => {
-        processData.avgXForY(req.params.x, req.params.y, dbColl, (err, results) => {
+      processData.avgXForYWithMode(req.params.x, req.params.y, dbColl, (err, results) => {
         if (err) {
           // 500 = Internal Server Error
           return res.status(500).send(err);

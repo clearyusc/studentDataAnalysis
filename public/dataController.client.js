@@ -13,9 +13,13 @@
 
   const dataAvgNumber = document.querySelector('#show-data-avg');
   const dataLegend = document.querySelector('#data-legend');
-  const dataAPIURL = 'http://localhost:3000/api/data';
-  dataAvgNumber.innerHTML = 'v1.0';
 
+  const graphContexts = [];
+  dataAvgNumber.innerHTML = '';
+
+  const dataAPIURL = 'http://localhost:3000/api/data';
+  const barGraphString = 'BAR';
+  const lineGraphString = 'LINE';
   // let input = document.getElementById('myinput');
   // new Awesomplete(input, {
   //   list: ['Ada', 'Java', 'JavaScript', 'LOLCODE', 'Node.js', 'Ruby on Rails'],
@@ -132,27 +136,16 @@
     ajaxRequest('GET', `${dataAPIURL}/reset`, resetDatabase);
   });
 
-  // need to source js 
-  // var myChart = new Chart(ctx, {...});
-  const graphContexts = [];
-  
-  function createGraph(xValues, yValues, graphLabel) {
-    var ctx = document.querySelector(`#myGraph_${graphContexts.length + 1}`);    
+  function createBarGraph(xValues, yValues, datasetSizes, graphLabel) {
+    const ctx = document.querySelector(`#myGraph_${graphContexts.length + 1}`);
     graphContexts.push(ctx);
     const myGraph = new Chart(ctx, {
-      type: 'bar', // change to line
-      // data: {
-      //   datasets: [{
-      //     label: 'Scatter Dataset',
-      //     data: 
-      //   }],
-      // },
+      type: 'bar',
       data: {
       // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
         labels: xValues,
         datasets: [{
           label: graphLabel,
-          // data: [12, 19, 3, 5, 2, 3],
           data: yValues,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
@@ -174,6 +167,13 @@
         }],
       },
       options: {
+        tooltips: {
+          callbacks: {
+            label(tooltipItem) {
+              return `Dataset size: ${datasetSizes[tooltipItem.index]}`;
+            },
+          },
+        },
         scales: {
           yAxes: [{
             ticks: {
@@ -185,19 +185,103 @@
     });
   }
 
+  function createScatterGraph(xyPairs, graphLabel) {
+    const ctx = document.querySelector(`#myGraph_${graphContexts.length + 1}`);
+    graphContexts.push(ctx);
+    const scatterChart = new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: graphLabel,
+          data: xyPairs,
+        }],
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            type: 'linear',
+            position: 'bottom',
+          }],
+        },
+      },
+    });
+  }
+
+  function createLineGraph(xValues, yValues, graphLabel) {
+    const ctx = document.querySelector(`#myGraph_${graphContexts.length + 1}`);
+    graphContexts.push(ctx);
+    const myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: xValues,
+        datasets: [{
+          label: graphLabel,
+          data: yValues,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+          ],
+          borderWidth: 1,
+          showLine: null,
+        }],
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+            },
+          }],
+        },
+      },
+    });
+  }
 
   function updateGraphData(data) {
     const graphDataObj = JSON.parse(data);
-    //dataAvgNumber.innerHTML = JSON.stringify(graphDataObj);
+    // dataAvgNumber.innerHTML = JSON.stringify(graphDataObj);
     // TODO: Push this code change to the backend in processdata.js
     const xValues = [];
     const yValues = []; // these should be unique given our current setup
-    graphDataObj.forEach((obj) => {
-      xValues.push(obj['_id']);
-      yValues.push(obj['avgXValue']); //don't be confused - this is not a typo!
-    });
-    // TODO: update this way of inputting the label:
-    createGraph(xValues, yValues, `${xSearchBar.value} vs. ${ySearchBar.value}`);
+    const datasetSizes = [];
+
+    // TODO: update this way of inputting the label:    
+    // INPUT THIS SWITCH VAL FROM THE DOCUMENT SELECTOR
+    // 'BAR'
+    switch ('BAR') {
+      case barGraphString:
+        graphDataObj.forEach((obj) => {
+          xValues.push(obj._id);
+          yValues.push(obj.avgXValue); // don't be confused - this is not a typo!
+          datasetSizes.push(obj.datasetSize);
+        });
+        createBarGraph(xValues, yValues, datasetSizes, `${xSearchBar.value} vs. ${ySearchBar.value}`);
+        break;
+      case 'SCATTER':
+        createScatterGraph(graphDataObj, 'label!');
+        break;
+      case 'LINE':
+        graphDataObj.forEach((obj) => {
+          xValues.push(obj.x);
+          yValues.push(obj.y); // don't be confused - this is not a typo!
+        });
+        createLineGraph(xValues, yValues, `${xSearchBar.value} vs. ${ySearchBar.value}`);
+        break;
+      default:
+        break;
+    }
   }
 
   graphButton.addEventListener('click', () => {

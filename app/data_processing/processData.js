@@ -42,12 +42,40 @@ const processData = {
     });
   },
 
+  // for graphing purposes
+  avgXForYWithMode: (xKey, yKey, dbCollection, done) => {
+    const queryXKey = `$${xKey}`;
+    const queryYKey = `$${yKey}`;
+    dbCollection.aggregate([
+      {
+        $group: {
+          _id: queryYKey,
+          avgXValue: {
+            $avg: queryXKey,
+          },
+          datasetSize: { $sum: 1 },
+        },
+      },
+      { $sort: {
+        _id: 1,
+      },
+      },
+    ]).toArray((err, results) => {
+      console.log('MODE: queryXKey = ', queryXKey);
+      console.log('MODE: queryYKey = ', queryYKey);
+      console.log('MODE: axgXForY: how MANY= ', results[0].datasetSize);
+      if (err) done(err, null);
+      done(null, results); // 'null' because there is no error
+    });
+  },
+
   // e.g. Generate data points for a graph of travel time to overall grade
   compareXAndY: (xKey, yKey, dbCollection, done) => {
     const queryXKey = `$${xKey}`;
     const queryYKey = `$${yKey}`;
     const projectQuery = {
-      _id: `${xKey} vs. ${yKey}`,
+      //_id: `${xKey} vs. ${yKey}`,
+      _id: 0,
       x: queryXKey,
       y: queryYKey,
     };
