@@ -170,7 +170,7 @@
         tooltips: {
           callbacks: {
             label(tooltipItem) {
-              return `Dataset size: ${datasetSizes[tooltipItem.index]}`;
+              return `Dataset size: ${datasetSizes[tooltipItem.index]}, val = ${mathRound(yValues[tooltipItem.index], numRoundDecimalPlaces)}`;
             },
           },
         },
