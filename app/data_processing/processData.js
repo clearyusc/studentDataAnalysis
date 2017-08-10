@@ -40,11 +40,12 @@ const processData = {
 
   // e.g. Generate data points for a graph of travel time to overall grade
   compareXAndY: (xKey, yKey, dbCollection, done) => {    
-
+    const queryXKey = `$${xKey}`;
+    const queryYKey = `$${yKey}`;
     const projectQuery = {
       _id: `${xKey} vs. ${yKey}`,
-      x: xKey,
-      y: yKey,
+      x: queryXKey,
+      y: queryYKey,
     };
 
     const sortQuery = {};
