@@ -108,18 +108,6 @@
     dataAvgNumber.innerHTML = `${response}`;
   }
 
-  function updateGraphData(data) {
-    const graphDataObj = JSON.parse(data);
-    dataAvgNumber.innerHTML = JSON.stringify(graphDataObj);
-    // TODO: figure out how to distinguish x and y values
-    const xValues = [];
-    const yValues = [];
-    graphDataObj.forEach((obj) => {
-      //xValues.push(Object.keys(obj)[0])
-    });
-    createGraph();
-  }
-
 
   // *** the ready function simply loads something on PAGE LOAD ***
   // ready(ajaxRequest('GET', `${dataAPIURL}/csvtomongo`, sendCSVToDatabase));
@@ -144,20 +132,21 @@
     ajaxRequest('GET', `${dataAPIURL}/reset`, resetDatabase);
   });
 
-  graphButton.addEventListener('click', () => {
-    const xKey = xSearchBar.value;
-    const yKey = ySearchBar.value;
-
-    ajaxRequest('GET', `${dataAPIURL}/graph/${xKey}/${yKey}`, updateGraphData);
-  });
-
-
   // need to source js 
   // var myChart = new Chart(ctx, {...});
-  const ctx = document.querySelector('#myGraph');
-  function createGraph(yValues, xValues, graphLabel) {
+  const graphContexts = [];
+  
+  function createGraph(xValues, yValues, graphLabel) {
+    var ctx = document.querySelector(`#myGraph_${graphContexts.length + 1}`);    
+    graphContexts.push(ctx);
     const myGraph = new Chart(ctx, {
       type: 'bar', // change to line
+      // data: {
+      //   datasets: [{
+      //     label: 'Scatter Dataset',
+      //     data: 
+      //   }],
+      // },
       data: {
       // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
         labels: xValues,
@@ -195,6 +184,27 @@
       },
     });
   }
+
+
+  function updateGraphData(data) {
+    const graphDataObj = JSON.parse(data);
+    //dataAvgNumber.innerHTML = JSON.stringify(graphDataObj);
+    // TODO: Push this code change to the backend in processdata.js
+    const xValues = [];
+    const yValues = []; // these should be unique given our current setup
+    graphDataObj.forEach((obj) => {
+      xValues.push(obj['_id']);
+      yValues.push(obj['avgXValue']); //don't be confused - this is not a typo!
+    });
+    createGraph(xValues, yValues, '');
+  }
+
+  graphButton.addEventListener('click', () => {
+    const xKey = xSearchBar.value;
+    const yKey = ySearchBar.value;
+
+    ajaxRequest('GET', `${dataAPIURL}/graph/${xKey}/${yKey}`, updateGraphData);
+  });
 }());
 
 // SEARCH UI!

@@ -29,6 +29,10 @@ const processData = {
           },
         },
       },
+      { $sort: {
+        _id: 1,
+      },
+      },
     ]).toArray((err, results) => {
       console.log('queryXKey = ', queryXKey);
       console.log('queryYKey = ', queryYKey);
@@ -39,7 +43,7 @@ const processData = {
   },
 
   // e.g. Generate data points for a graph of travel time to overall grade
-  compareXAndY: (xKey, yKey, dbCollection, done) => {    
+  compareXAndY: (xKey, yKey, dbCollection, done) => {
     const queryXKey = `$${xKey}`;
     const queryYKey = `$${yKey}`;
     const projectQuery = {
