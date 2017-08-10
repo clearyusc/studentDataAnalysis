@@ -30,6 +30,8 @@ const processData = {
         },
       },
     ]).toArray((err, results) => {
+      console.log('queryXKey = ',queryXKey);
+      console.log('queryYKey = ',queryYKey);
       console.log('axgXForY: DIZZZ IZ HOW MANY= ', results.length);
       if (err) done(err, null);
       done(null, results); // 'null' because there is no error
